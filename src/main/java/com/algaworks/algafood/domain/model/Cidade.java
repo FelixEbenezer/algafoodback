@@ -8,6 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
+
+import com.algaworks.algafood.core.validation.Groups;
 
 @Entity
 @Table
@@ -17,9 +23,13 @@ public class Cidade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	@Column(nullable = false)
 	private String nome; 
 	
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.CadastroCidade.class)
+	@Valid
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Estado estado;

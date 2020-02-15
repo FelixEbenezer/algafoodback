@@ -18,10 +18,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.algaworks.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,11 +39,16 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private String nome;
 	
+	@PositiveOrZero
 	@Column(name = "tx_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
+	@NotNull
+	@ConvertGroup(from = Default.class, to = Groups.CadastroRestaurante.class)
+	@Valid
 	// @JsonIgnore
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +62,7 @@ public class Restaurante {
 	inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
-	// @JsonIgnore
+	@JsonIgnore
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@Embedded
 	private Endereco endereco;

@@ -1,0 +1,1 @@
+alter table restaurante change taxa_frete tx_frete varchar(60) not null;

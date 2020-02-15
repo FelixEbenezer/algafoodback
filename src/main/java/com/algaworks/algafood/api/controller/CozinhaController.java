@@ -1,7 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
@@ -41,12 +41,16 @@ public class CozinhaController {
 	
 	@PostMapping
 	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Cozinha> adicionarCozinha(@RequestBody Cozinha cozinha) {
+	public ResponseEntity<Cozinha> adicionarCozinha(@RequestBody @Valid Cozinha cozinha) {
 		 Cozinha cozinha1 = cozinhaService.salvar(cozinha);
 		 
 		 return ResponseEntity.status(HttpStatus.CREATED).body(cozinha1);
 	}
+
 	
+//=============ATUALIZAR=======================================================
+// VERSAO ANTIGA============================
+/*	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar (@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		
@@ -60,10 +64,25 @@ public class CozinhaController {
 		}
 		
 		return ResponseEntity.notFound().build();
+	}*/
+
+// VERSÃO SIMPLIFFCADA=================
+		
+	@PutMapping("/{id}")
+	public Cozinha atualizar (@PathVariable Long id, @RequestBody @Valid Cozinha cozinha) {
+		
+		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(id);
+		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+		cozinhaRepository.save(cozinhaAtual);
+				
+		return cozinhaAtual;
 	}
+////==============================================================================
 	
-	
-	@DeleteMapping("/{id}")
+///========= METODO REMOVER ======================================
+// A PRIMEIRA VERSAO =======================
+
+/*	@DeleteMapping("/{id}")
 	public ResponseEntity<Cozinha> remover (@PathVariable Long id){
 		try {
 		
@@ -79,10 +98,21 @@ public class CozinhaController {
 		catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}*/
+	
+// A VERSÃO SIMPLIFICADA =============================================
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover (@PathVariable Long id){
+		cozinhaService.remover(id);
 	}
 	
+//================================================================================
 	
-	@GetMapping("/{id}")
+	
+//==========================BUSCAR POR ID
+// VERSÃO PRIMARIA
+/*	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long id) {
 		Optional<Cozinha> cozinha =  cozinhaRepository.findById(id);
 		
@@ -93,7 +123,18 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build(); // para não retornar nada  no body
 		
 		
+	}*/
+
+	// VERSAO SIMPLIFICADA
+	@GetMapping("/{id}")
+	public Cozinha buscarPorId(@PathVariable Long id) {
+		return  cozinhaService.buscarOuFalhar(id);
+		
 	}
+//===============================================================================
+	
+	
+	
 	
 	//consultar por nome completo
 	

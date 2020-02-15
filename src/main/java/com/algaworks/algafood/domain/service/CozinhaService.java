@@ -9,14 +9,18 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.algaworks.algafood.domain.exception.CozinhaEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 
 
 @Service
 public class CozinhaService {
+
+	private static final String MSG_CODE_UTILISE = "Cidade de código %d não pode ser removida, pois está em uso";
+
+	private static final String MSG_CODE_MAL = "LE CODE %d INSÉRÉ ERRONÉ";
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
@@ -32,13 +36,19 @@ public class CozinhaService {
 		}
 		
 		catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Cozinha de código &d não pode ser removida, pois está em uso", id));
+			throw new EntidadeEmUsoException(String.format(MSG_CODE_UTILISE, id));
 		}
 		
 		catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Cozinha com o código &d ", id));
+			throw new CozinhaEncontradaException(String.format(MSG_CODE_MAL, id));
 		}
 		
+	}
+	
+	public Cozinha buscarOuFalhar(Long id) {
+		return  cozinhaRepository.findById(id).orElseThrow(()
+				-> new CozinhaEncontradaException(id));
+
 	}
 	
 	//consultar por texto completo

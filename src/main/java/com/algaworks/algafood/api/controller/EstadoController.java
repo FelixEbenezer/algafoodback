@@ -1,7 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.EstadoService;
 
@@ -34,24 +35,21 @@ public class EstadoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Estado> buscarPorId(@PathVariable Long id) {
-		Optional<Estado> estado = estadoService.buscarPorIdEstado(id);
+	public Estado buscarPorId(@PathVariable Long id) {
+		return estadoService.buscarOuFalhar(id);
 		
-		if(estado.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(estado.get());
 	}
 	
 	@PostMapping
-	public ResponseEntity<Estado> adicionar (@RequestBody Estado estado) {
+	public ResponseEntity<Estado> adicionar (@RequestBody @Valid Estado estado) {
 		Estado es = estadoService.adicionarEstado(estado);
 		return ResponseEntity.status(HttpStatus.CREATED).body(es);
 	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> eliminar (@PathVariable Long id) {
+
+	//=============ELIMIAR==========================================
+	//ANTIGA VERSAO
+	/* @DeleteMapping("/{id}")
+		public ResponseEntity<?> eliminar (@PathVariable Long id) {
 		
 		try {
 		estadoService.removerEstado(id);
@@ -65,25 +63,26 @@ public class EstadoController {
 		catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
-	}
+	}*/
+	
+	// VERSAO SIMPLIFICADA
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void eliminar (@PathVariable Long id) {
+	
+	estadoService.removerEstado(id);
+}
 	
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
+	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
 		
-		try {
-		Optional<Estado> es = estadoService.buscarPorIdEstado(id);
-		if(es.isPresent()) {
-		BeanUtils.copyProperties(estado, es.get(), "id");
-		estadoService.adicionarEstado(es.get()); 
 		
-		return ResponseEntity.ok(es.get());
-		}
-		return ResponseEntity.notFound().build();
-	}
-		catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-
+		Estado es = estadoService.buscarOuFalhar(id);
+		
+		BeanUtils.copyProperties(estado, es, "id");
+		estadoService.adicionarEstado(es); 
+		
+		return es; 
 }
 }

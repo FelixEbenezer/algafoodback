@@ -9,17 +9,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.algaworks.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table
 public class Cozinha {
 
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
+	@NotBlank
 	private String nome;
 	
 	@JsonIgnore   // para não sair em representação para nao entrar em referencia circular

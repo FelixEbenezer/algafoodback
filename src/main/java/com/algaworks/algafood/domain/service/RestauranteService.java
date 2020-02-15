@@ -9,8 +9,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.algaworks.algafood.domain.exception.CozinhaEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
@@ -20,6 +21,11 @@ import com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs;
 @Service
 public class RestauranteService {
 	
+	private static final String MSG_CODE_UTILISE = "Cidade de código %d não pode ser removida, pois está em uso";
+
+	private static final String MSG_CODE_MAL = "LE CODE %d INSÉRÉ ERRONÉ";
+
+
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
@@ -48,7 +54,7 @@ public class RestauranteService {
 		Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId); 
 		
 		if( cozinha.isEmpty()) {
-			throw new EntidadeNaoEncontradaException("Não existe codigo de cozinha fornecido");
+			throw new CozinhaEncontradaException(String.format(MSG_CODE_MAL, cozinhaId));
 		}
 		
 		restaurante.setCozinha(cozinha.get());
@@ -65,13 +71,21 @@ public class RestauranteService {
 		}
 		
 		catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException("O codigo restaurante em uso");
+			throw new EntidadeEmUsoException(String.format(MSG_CODE_UTILISE, id));
 		}
 		
 		catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException("Não existe o Restaurante");
+			throw new RestauranteNaoEncontradaException(String.format(MSG_CODE_MAL, id));
 		}
 	}
+	
+	
+	public Restaurante buscarOuFalhar(Long id) {
+		return restauranteRepository.findById(id).orElseThrow(
+				()-> new RestauranteNaoEncontradaException(id));
+	}
+	
+	
 	
 	// CONSULTAR ==================================
 	
