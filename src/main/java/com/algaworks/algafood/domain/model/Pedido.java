@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +35,13 @@ public class Pedido {
 	
 	@CreationTimestamp
 	@Column(nullable = false)
-	private LocalDateTime dataCriacao;
+	private OffsetDateTime dataCriacao;
 	
-	private LocalDateTime dataConfirmcao; 
+	private OffsetDateTime dataConfirmcao; 
 	
-	private LocalDateTime dataCancelamento;
+	private OffsetDateTime dataCancelamento;
 	
-	private LocalDateTime dataEntrega; 
+	private OffsetDateTime dataEntrega; 
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
@@ -97,35 +97,35 @@ public class Pedido {
 		this.valorTotal = valorTotal;
 	}
 
-	public LocalDateTime getDataCriacao() {
+	public OffsetDateTime getDataCriacao() {
 		return dataCriacao;
 	}
 
-	public void setDataCriacao(LocalDateTime dataCriacao) {
+	public void setDataCriacao(OffsetDateTime dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
 
-	public LocalDateTime getDataConfirmcao() {
+	public OffsetDateTime getDataConfirmcao() {
 		return dataConfirmcao;
 	}
 
-	public void setDataConfirmcao(LocalDateTime dataConfirmcao) {
+	public void setDataConfirmcao(OffsetDateTime dataConfirmcao) {
 		this.dataConfirmcao = dataConfirmcao;
 	}
 
-	public LocalDateTime getDataCancelamento() {
+	public OffsetDateTime getDataCancelamento() {
 		return dataCancelamento;
 	}
 
-	public void setDataCancelamento(LocalDateTime dataCancelamento) {
+	public void setDataCancelamento(OffsetDateTime dataCancelamento) {
 		this.dataCancelamento = dataCancelamento;
 	}
 
-	public LocalDateTime getDataEntrega() {
+	public OffsetDateTime getDataEntrega() {
 		return dataEntrega;
 	}
 
-	public void setDataEntrega(LocalDateTime dataEntrega) {
+	public void setDataEntrega(OffsetDateTime dataEntrega) {
 		this.dataEntrega = dataEntrega;
 	}
 

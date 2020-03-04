@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.algaworks.algafood.api.assembler.CozinhaDtoAssembler;
+import com.algaworks.algafood.api.assembler.CozinhaDtoDisassembler;
+import com.algaworks.algafood.api.model.CozinhaDTO;
+import com.algaworks.algafood.api.model.input.CozinhaInputDTO;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
@@ -26,27 +30,57 @@ import com.algaworks.algafood.domain.service.CozinhaService;
 public class CozinhaController {
 	
 	@Autowired
+	private CozinhaDtoAssembler assembler; 
+	
+	@Autowired
+	private CozinhaDtoDisassembler disassembler; 
+	
+	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
 	@Autowired
 	private CozinhaService cozinhaService;
 	
-	
-	//@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+// ========================LISTAR ===============================================	
+	//antes DTO
+/*	//@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@GetMapping
 	public List<Cozinha> listarCozinha() {
 		return cozinhaRepository.findAll();
 	}
+	*/
+	
+	// com DTO
+	@GetMapping
+	public List<CozinhaDTO> listarCozinha() {
+		return assembler.toCollectionDTO(cozinhaRepository.findAll());
+	}
+// ===================== FIN listar ==============================================
 	
 	
-	@PostMapping
+// ===================== ADICIONAR ===============================================
+	// antes do DTO
+/*	@PostMapping
 	//@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Cozinha> adicionarCozinha(@RequestBody @Valid Cozinha cozinha) {
 		 Cozinha cozinha1 = cozinhaService.salvar(cozinha);
 		 
 		 return ResponseEntity.status(HttpStatus.CREATED).body(cozinha1);
+	}*/
+	
+	// com DTO
+	@PostMapping
+	//@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<CozinhaDTO> adicionarCozinha(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+		 Cozinha cozinha1 = disassembler.toDomainObject(cozinhaInputDTO);
+		 CozinhaDTO coz = assembler.toDTO(cozinhaService.salvar(cozinha1));
+		 
+ 
+		 return ResponseEntity.status(HttpStatus.CREATED).body(coz);
 	}
 
+// ================== FIN ADICIONAR ==============================================
+	
 	
 //=============ATUALIZAR=======================================================
 // VERSAO ANTIGA============================
@@ -67,8 +101,10 @@ public class CozinhaController {
 	}*/
 
 // VERSÃO SIMPLIFFCADA=================
-		
-	@PutMapping("/{id}")
+
+// sem DTO
+
+   /*	@PutMapping("/{id}")
 	public Cozinha atualizar (@PathVariable Long id, @RequestBody @Valid Cozinha cozinha) {
 		
 		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(id);
@@ -76,8 +112,22 @@ public class CozinhaController {
 		cozinhaRepository.save(cozinhaAtual);
 				
 		return cozinhaAtual;
+	}*/
+	
+	// com DTO
+	
+	@PutMapping("/{id}")
+	public CozinhaDTO atualizar (@PathVariable Long id, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+		
+		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(id);
+		disassembler.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
+		return assembler.toDTO(cozinhaRepository.save(cozinhaAtual));
 	}
 ////==============================================================================
+	
+
+	
+	
 	
 ///========= METODO REMOVER ======================================
 // A PRIMEIRA VERSAO =======================
@@ -126,9 +176,19 @@ public class CozinhaController {
 	}*/
 
 	// VERSAO SIMPLIFICADA
-	@GetMapping("/{id}")
+	
+	// sem DTO
+/*	@GetMapping("/{id}")
 	public Cozinha buscarPorId(@PathVariable Long id) {
 		return  cozinhaService.buscarOuFalhar(id);
+		
+	}*/
+	
+	// com DTO
+	
+	@GetMapping("/{id}")
+	public CozinhaDTO buscarPorId(@PathVariable Long id) {
+		return  assembler.toDTO(cozinhaService.buscarOuFalhar(id));
 		
 	}
 //===============================================================================

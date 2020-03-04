@@ -1,0 +1,8 @@
+{
+ 
+        "nome":"Manda Fuck",
+        "taxaFrete": 150.00,
+        "cozinha": {
+            "id": 1
+        }
+    }

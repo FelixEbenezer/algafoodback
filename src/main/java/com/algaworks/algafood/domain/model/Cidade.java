@@ -27,6 +27,7 @@ public class Cidade {
 	@Column(nullable = false)
 	private String nome; 
 	
+	// @JsonIgnoreProperties(value = "nome", allowGetters = true)
 	@NotNull
 	@ConvertGroup(from = Default.class, to = Groups.CadastroCidade.class)
 	@Valid

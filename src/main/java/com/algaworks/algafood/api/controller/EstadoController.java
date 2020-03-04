@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.algaworks.algafood.api.assembler.EstadoDtoAssembler;
+import com.algaworks.algafood.api.assembler.EstadoDtoDisassembler;
+import com.algaworks.algafood.api.model.EstadoDTO;
+import com.algaworks.algafood.api.model.input.EstadoInputDTO;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.EstadoService;
 
@@ -27,23 +30,30 @@ import com.algaworks.algafood.domain.service.EstadoService;
 public class EstadoController {
 	
 	@Autowired
+	private EstadoDtoAssembler assembler; 
+	
+	@Autowired
+	private EstadoDtoDisassembler disassembler; 
+	
+	@Autowired
 	private EstadoService estadoService;
 	
 	@GetMapping
-	public List<Estado> listarEstados() {
-		return estadoService.listarEstado();
+	public List<EstadoDTO> listarEstados() {
+		return assembler.toCollectionDTO(estadoService.listarEstado());
 	}
 	
 	@GetMapping("/{id}")
-	public Estado buscarPorId(@PathVariable Long id) {
-		return estadoService.buscarOuFalhar(id);
+	public EstadoDTO buscarPorId(@PathVariable Long id) {
+		return assembler.toDTO(estadoService.buscarOuFalhar(id));
 		
 	}
 	
 	@PostMapping
-	public ResponseEntity<Estado> adicionar (@RequestBody @Valid Estado estado) {
-		Estado es = estadoService.adicionarEstado(estado);
-		return ResponseEntity.status(HttpStatus.CREATED).body(es);
+	public ResponseEntity<EstadoDTO> adicionar (@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
+		Estado es = disassembler.toDomainObject(estadoInputDTO); 
+		EstadoDTO esDTO = assembler.toDTO(estadoService.adicionarEstado(es));
+		return ResponseEntity.status(HttpStatus.CREATED).body(esDTO);
 	}
 
 	//=============ELIMIAR==========================================
@@ -75,14 +85,12 @@ public class EstadoController {
 	
 	
 	@PutMapping("/{id}")
-	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
+	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		
 		
 		Estado es = estadoService.buscarOuFalhar(id);
+		disassembler.copyToDomainObject(estadoInputDTO, es);
+		return assembler.toDTO(estadoService.adicionarEstado(es)); 
 		
-		BeanUtils.copyProperties(estado, es, "id");
-		estadoService.adicionarEstado(es); 
-		
-		return es; 
 }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradaException;
@@ -23,21 +24,26 @@ public class EstadoService {
 	@Autowired
 	EstadoRepository estadoRepository;
 	
+	@Transactional
 	public List<Estado> listarEstado() {
 		return estadoRepository.findAll();
 	}
 	
+	@Transactional
 	public Optional<Estado> buscarPorIdEstado(Long id) {
 		return estadoRepository.findById(id);
 	}
 	
+	@Transactional
 	public Estado adicionarEstado (Estado estado) {
 		return estadoRepository.save(estado);
 	}
 	
+	@Transactional
 	public void removerEstado(Long id) {
 		try {
 			estadoRepository.deleteById(id);
+			estadoRepository.flush();
 		}
 		
 		catch (DataIntegrityViolationException e) {

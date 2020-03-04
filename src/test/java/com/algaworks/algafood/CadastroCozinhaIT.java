@@ -2,6 +2,8 @@ package com.algaworks.algafood;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
+
 import javax.validation.ConstraintViolationException;
 
 import org.junit.runner.RunWith;
@@ -12,14 +14,18 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
+import com.algaworks.algafood.domain.service.RestauranteService;
 import com.algaworks.algafood.util.DatabaseCleaner;
 import com.algaworks.algafood.util.ResourceUtils;
 
@@ -34,6 +40,12 @@ public class CadastroCozinhaIT {
 	@Autowired
 	private CozinhaService cozinhaService;
 	
+	@Autowired
+	private RestauranteService restauranteService;
+	
+	@Autowired
+	private RestauranteRepository restauranteRepository; 
+	
 	@LocalServerPort
 	private int port;
 	
@@ -42,6 +54,7 @@ public class CadastroCozinhaIT {
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
 	
 	// para refatoramento
 	
@@ -204,10 +217,22 @@ public class CadastroCozinhaIT {
 			cozinhaService.remover(2L);
 		}
 		
-		@Test(expected = EntidadeEmUsoException.class)
+		@Test(expected = DataIntegrityViolationException.class)
 		public void testarExclusaoCozinhaFalha1_IdEmUso() {
 			
-			cozinhaService.remover(1L);
+			
+			Cozinha coz1 = new Cozinha();
+			coz1.setId(5L);
+			coz1.setNome("bbb");
+			cozinhaService.salvar(coz1);
+			
+			Restaurante res1 = new Restaurante();
+			res1.setNome("BBB");
+			res1.setTaxaFrete(new BigDecimal(100.00));
+			res1.setCozinha(coz1);
+			//restauranteService.adicionarRestaurante(res1);
+			restauranteRepository.save(res1);
+			cozinhaService.remover(coz1.getId());
 		}
 		
 		@Test(expected = EntidadeNaoEncontradaException.class)

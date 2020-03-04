@@ -13,7 +13,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.algaworks.algafood.core.validation.Groups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table
@@ -28,7 +27,7 @@ public class Cozinha {
 	@NotBlank
 	private String nome;
 	
-	@JsonIgnore   // para não sair em representação para nao entrar em referencia circular
+	// @JsonIgnore   // para não sair em representação para nao entrar em referencia circular
 	@OneToMany(mappedBy = "cozinha")  // cozinha é o nome dado no campo da tablea restaurante para fazer o mapeamente de 2 tables
 	private List<Restaurante> restaurantes = new ArrayList<>();
 

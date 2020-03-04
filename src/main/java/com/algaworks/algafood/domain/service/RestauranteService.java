@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
+import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs;
@@ -32,14 +36,17 @@ public class RestauranteService {
 	@Autowired
 	public CozinhaRepository cozinhaRepository;
 	
-	// LISTAR ==================================
+	@Autowired
+	public CidadeRepository cidadeRepository; 
 	
+	// LISTAR ==================================
+	@Transactional
 	public List<Restaurante> listarRestaurante() {
 		return restauranteRepository.findAll();
 	}
 	
 	// BUSCAR POR ID ==================================
-	
+	@Transactional
 	public Optional<Restaurante> bucarPorIdRestaurante (Long id) {
 		return restauranteRepository.findById(id);
 	}
@@ -47,27 +54,37 @@ public class RestauranteService {
 	// ADICIONAR  ==================================
 	
 	
+	@Transactional
 	public Restaurante adicionarRestaurante (Restaurante restaurante) {
 		
 		
 		Long cozinhaId = restaurante.getCozinha().getId();
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
+		
 		Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId); 
+		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
 		
 		if( cozinha.isEmpty()) {
 			throw new CozinhaEncontradaException(String.format(MSG_CODE_MAL, cozinhaId));
 		}
 		
+		if( cidade.isEmpty()) {
+			throw new CidadeNaoEncontradaException(String.format(MSG_CODE_MAL, cidadeId));
+		}
+		
 		restaurante.setCozinha(cozinha.get());
+		restaurante.getEndereco().setCidade(cidade.get());
 		
 		return restauranteRepository.save(restaurante);
 		
 	}
 	
 	// REMOVER ==================================
-	
+	@Transactional
 	public void removerRestaurante (Long id) {
 		try {
 		restauranteRepository.deleteById(id);
+		restauranteRepository.flush();
 		}
 		
 		catch (DataIntegrityViolationException e) {
@@ -83,6 +100,20 @@ public class RestauranteService {
 	public Restaurante buscarOuFalhar(Long id) {
 		return restauranteRepository.findById(id).orElseThrow(
 				()-> new RestauranteNaoEncontradaException(id));
+	}
+	
+	// =================ATIVACAO INATIVACAO
+	
+	@Transactional
+	public void ativar (Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.ativar();
+	}
+	
+	@Transactional
+	public void inativar (Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.inativar();
 	}
 	
 	
