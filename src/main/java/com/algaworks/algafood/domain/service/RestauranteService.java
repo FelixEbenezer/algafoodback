@@ -16,6 +16,7 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
@@ -38,6 +39,9 @@ public class RestauranteService {
 	
 	@Autowired
 	public CidadeRepository cidadeRepository; 
+	
+	@Autowired
+	private FormaPagamentoService formaPagamentoService;
 	
 	// LISTAR ==================================
 	@Transactional
@@ -116,7 +120,37 @@ public class RestauranteService {
 		restaurante.inativar();
 	}
 	
+	//================ ASSOCIAR /DISSOCIAR FORMA PAGAMENTO AO RESTAURANTE======
 	
+	@Transactional
+	public void associar(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.associarFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public void dissociar(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.dissociarFormaPagamento(formaPagamento);
+	}
+
+	//================ ABERTURA/FECHO DO RESTAURANTE======
+	
+	@Transactional
+	public void abrir(Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.abrir();
+	}
+	
+	@Transactional
+	public void fechar(Long id) {
+		Restaurante restaurante = buscarOuFalhar(id);
+		restaurante.fechar();
+	}
 	
 	// CONSULTAR ==================================
 	

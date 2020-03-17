@@ -6,26 +6,24 @@ import java.math.BigDecimal;
 
 import javax.validation.ConstraintViolationException;
 
-import org.junit.runner.RunWith;
-import org.springframework.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
-import com.algaworks.algafood.domain.service.RestauranteService;
 import com.algaworks.algafood.util.DatabaseCleaner;
 import com.algaworks.algafood.util.ResourceUtils;
 
@@ -40,8 +38,6 @@ public class CadastroCozinhaIT {
 	@Autowired
 	private CozinhaService cozinhaService;
 	
-	@Autowired
-	private RestauranteService restauranteService;
 	
 	@Autowired
 	private RestauranteRepository restauranteRepository; 

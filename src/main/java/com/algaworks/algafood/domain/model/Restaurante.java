@@ -3,7 +3,9 @@ package com.algaworks.algafood.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -38,6 +40,16 @@ public class Restaurante {
 	
 	private Boolean ativo = Boolean.TRUE;
 	
+	private Boolean aberto = Boolean.FALSE; 
+	
+	public Boolean getAberto() {
+		return aberto;
+	}
+
+	public void setAberto(Boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	@NotNull
 	private String nome;
 	
@@ -60,7 +72,7 @@ public class Restaurante {
 	@JoinTable(name = "restaurante_forma_pagamento", 
 	joinColumns = @JoinColumn(name="restaurante_id"),
 	inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
+	private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
 	// @JsonIgnore
 	// @JsonIgnoreProperties("hibernateLazyInitializer")
@@ -123,11 +135,11 @@ public class Restaurante {
 		this.endereco = endereco;
 	}
 
-	public List<FormaPagamento> getFormasPagamento() {
+	public Set<FormaPagamento> getFormasPagamento() {
 		return formasPagamento;
 	}
 
-	public void setFormasPagamento(List<FormaPagamento> formasPagamento) {
+	public void setFormasPagamento(Set<FormaPagamento> formasPagamento) {
 		this.formasPagamento = formasPagamento;
 	}
 
@@ -197,4 +209,19 @@ public class Restaurante {
 		setAtivo(false);
 	}
 	
+	public Boolean associarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().add(formaPagamento);
+	}
+	
+	public Boolean dissociarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().remove(formaPagamento);
+	}
+	
+	public void abrir() {
+		setAberto(true);
+	}
+	
+	public void fechar() {
+		setAberto(false);
+	}
 }

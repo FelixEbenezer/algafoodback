@@ -10,7 +10,7 @@ public class CidadeInputDTO {
 	
 	@NotNull
 	@Valid
-	private EstadoIdInput nomeEstado;
+	private EstadoIdInput estado;
 
 	public String getNome() {
 		return nome;
@@ -20,12 +20,12 @@ public class CidadeInputDTO {
 		this.nome = nome;
 	}
 
-	public EstadoIdInput getNomeEstado() {
-		return nomeEstado;
+	public EstadoIdInput getEstado() {
+		return estado;
 	}
 
-	public void setNomeEstado(EstadoIdInput nomeEstado) {
-		this.nomeEstado = nomeEstado;
+	public void setEstado(EstadoIdInput estado) {
+		this.estado = estado;
 	} 
 	
 	

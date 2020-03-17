@@ -19,10 +19,13 @@ public class ModelMapperConfig {
 		modelMapper.createTypeMap(Restaurante.class, RestauranteDTO.class)
         .addMapping(Restaurante::getTaxaFrete, RestauranteDTO::setPrecoFrete)
         .addMapping(restSrc -> restSrc.getEndereco().getCidade().getEstado().getNome(), 
-        	(restDest, val) -> restDest.getEndereco().getCidade().setEstado((String) val));
+        	(restDest, val) -> restDest.getEndereco().getCidade().setNomeEstado((String) val));
 		
 		modelMapper.createTypeMap(FormaPagamento.class, FormaPagamentoDTO.class)
 		.addMapping(FormaPagamento::getDescricao, FormaPagamentoDTO::setDescricaoForma);
+		
+		//modelMapper.createTypeMap(Usuario.class, UsuarioSenhaInputDTO.class)
+		//.addMapping(Usuario::getSenha, UsuarioSenhaInputDTO::setSenhaAtual);
 		
 		return modelMapper;
 	}

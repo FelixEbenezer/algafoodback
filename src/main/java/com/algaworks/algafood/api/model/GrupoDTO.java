@@ -1,12 +1,10 @@
 package com.algaworks.algafood.api.model;
 
-public class CidadeResumoDTO {
+public class GrupoDTO {
 	
 	private Long id; 
 	
-	private String nome; 
-	
-	private String nomeEstado;
+	private String nome;
 
 	public Long getId() {
 		return id;
@@ -22,15 +20,8 @@ public class CidadeResumoDTO {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public String getNomeEstado() {
-		return nomeEstado;
-	}
-
-	public void setNomeEstado(String nomeEstado) {
-		this.nomeEstado = nomeEstado;
 	} 
+	
 	
 
 }

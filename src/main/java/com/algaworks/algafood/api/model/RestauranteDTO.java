@@ -15,6 +15,16 @@ public class RestauranteDTO {
 	
 	private Boolean ativo;
 	
+	private Boolean aberto; 
+	
+	public Boolean getAberto() {
+		return aberto;
+	}
+
+	public void setAberto(Boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	private EnderecoDTO endereco; 
 	
 	private List<FormaPagamentoDTO> formasPagamento; 

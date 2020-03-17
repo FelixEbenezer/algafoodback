@@ -5,14 +5,14 @@ import javax.validation.constraints.NotNull;
 public class FormaPagamentoInputDTO {
 	
 	@NotNull
-	private String descricaoForma;
+	private String descricaoNome;
 
-	public String getDescricao() {
-		return descricaoForma;
+	public String getDescricaoNome() {
+		return descricaoNome;
 	}
 
-	public void setDescricao(String descricaoForma) {
-		this.descricaoForma = descricaoForma;
+	public void setDescricaoNome(String descricaoNome) {
+		this.descricaoNome = descricaoNome;
 	} 
 	
 	

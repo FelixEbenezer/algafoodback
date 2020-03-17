@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -24,11 +27,15 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
+	@NotNull
 	@Column(nullable = false)
 	private String nome; 
 	
+	@Email
+	@NotBlank
 	private String email; 
 	
+	@NotBlank
 	private String senha; 
 	
 	@CreationTimestamp
@@ -111,6 +118,14 @@ public class Usuario {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public boolean senhaCoincideCom(String senha) {
+		return getSenha().equals(senha);
+	}
+	
+	public boolean senhaNaoCoincideCom(String senha) {
+		return !senhaCoincideCom(senha);
 	}
 	
 	

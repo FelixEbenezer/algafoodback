@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
  
@@ -21,11 +23,13 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
+	@NotNull
 	@Column(nullable = false)
 	private String nome; 
 	
 	private String descricao; 
 	
+	@PositiveOrZero
 	@Column(nullable = false)
 	private BigDecimal preco; 
 	
@@ -108,6 +112,14 @@ public class Produto {
 			return false;
 		return true;
 	} 
+	
+	public void ativar () {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}
 	
 	
 
