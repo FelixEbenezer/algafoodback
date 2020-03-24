@@ -8,21 +8,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.algaworks.algafood.api.model.UsuarioDTO;
-import com.algaworks.algafood.domain.model.Usuario;
+import com.algaworks.algafood.api.model.ItemPedidoDTO;
+import com.algaworks.algafood.domain.model.ItemPedido;
 
 @Component
-public class UsuarioDtoAssembler {
+public class ItemPedidoDtoAssembler {
 
 	@Autowired
 	private ModelMapper modelMapper; 
 	
-	public UsuarioDTO toDTO (Usuario usuario) {
-		return modelMapper.map(usuario, UsuarioDTO.class);
+	public ItemPedidoDTO toDTO(ItemPedido itemPedido) {
+		return modelMapper.map(itemPedido, ItemPedidoDTO.class);
 	}
 	
-	public List<UsuarioDTO> toCollectionObject(Collection<Usuario> usuarios ) {
-		return usuarios.stream().map(usuario -> toDTO(usuario))
+	public List<ItemPedidoDTO> toCollectionObject(Collection<ItemPedido> itens){
+		return itens.stream().map(item -> toDTO(item))
 				.collect(Collectors.toList());
 	}
 }

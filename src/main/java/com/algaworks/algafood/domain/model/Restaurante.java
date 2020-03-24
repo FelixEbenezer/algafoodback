@@ -76,7 +76,7 @@ public class Restaurante {
 
 	// @JsonIgnore
 	// @JsonIgnoreProperties("hibernateLazyInitializer")
-	@NotNull
+	
 	@Valid
 	@Embedded
 	private Endereco endereco;
@@ -94,7 +94,22 @@ public class Restaurante {
 	private List<Produto> produtos = new ArrayList<>(); 
 	
 	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel", 
+	joinColumns = @JoinColumn(name="restaurante_id"),
+	inverseJoinColumns = @JoinColumn(name="usuario_id"))
+	private Set<Usuario> responsaveis = new HashSet<>();
 	
+	
+	
+	public Set<Usuario> getResponsaveis() {
+		return responsaveis;
+	}
+
+	public void setResponsaveis(Set<Usuario> responsaveis) {
+		this.responsaveis = responsaveis;
+	}
+
 	public Boolean getAtivo() {
 		return ativo;
 	}
@@ -223,5 +238,23 @@ public class Restaurante {
 	
 	public void fechar() {
 		setAberto(false);
+	}
+	
+	public boolean associarResponsavel (Usuario usuario) {
+		return getResponsaveis().add(usuario);
+	}
+	
+	public boolean dissociarResponsavel (Usuario usuario) {
+		return getResponsaveis().remove(usuario);
+	}
+	
+	
+	
+	public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return getFormasPagamento().contains(formaPagamento);
+	}
+
+	public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return !aceitaFormaPagamento(formaPagamento);
 	}
 }

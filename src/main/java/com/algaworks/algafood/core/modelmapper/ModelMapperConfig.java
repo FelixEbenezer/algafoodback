@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 import com.algaworks.algafood.api.model.FormaPagamentoDTO;
 import com.algaworks.algafood.api.model.RestauranteDTO;
+import com.algaworks.algafood.api.model.input.ItemInputDTO;
 import com.algaworks.algafood.domain.model.FormaPagamento;
+import com.algaworks.algafood.domain.model.ItemPedido;
 import com.algaworks.algafood.domain.model.Restaurante;
 
 @Configuration
@@ -26,6 +28,9 @@ public class ModelMapperConfig {
 		
 		//modelMapper.createTypeMap(Usuario.class, UsuarioSenhaInputDTO.class)
 		//.addMapping(Usuario::getSenha, UsuarioSenhaInputDTO::setSenhaAtual);
+		
+		modelMapper.createTypeMap(ItemInputDTO.class, ItemPedido.class)
+	    .addMappings(mapper -> mapper.skip(ItemPedido::setId)); 
 		
 		return modelMapper;
 	}

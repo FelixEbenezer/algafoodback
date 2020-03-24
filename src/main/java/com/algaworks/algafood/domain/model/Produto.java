@@ -92,7 +92,7 @@ public class Produto {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ativo == null) ? 0 : ativo.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -105,13 +105,13 @@ public class Produto {
 		if (getClass() != obj.getClass())
 			return false;
 		Produto other = (Produto) obj;
-		if (ativo == null) {
-			if (other.ativo != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!ativo.equals(other.ativo))
-			return false;
+		} else if (!id.equals(other.id))
+				return false;
 		return true;
-	} 
+	}
 	
 	public void ativar () {
 		setAtivo(true);

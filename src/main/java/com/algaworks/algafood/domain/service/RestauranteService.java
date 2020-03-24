@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +19,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
@@ -42,6 +44,9 @@ public class RestauranteService {
 	
 	@Autowired
 	private FormaPagamentoService formaPagamentoService;
+	
+	@Autowired
+	private UsuarioService usuarioService; 
 	
 	// LISTAR ==================================
 	@Transactional
@@ -120,6 +125,22 @@ public class RestauranteService {
 		restaurante.inativar();
 	}
 	
+	//===========ATIVACAO INATIVACAO EM MASSA ================================
+	
+	@Transactional
+	public void ativarMassa(List<Long> restauranteId) {
+			// restauranteId.forEach(this::ativar);
+			// caso nao quiser usar o forEach como em aula, e como so temos 
+		// um unico operacao a fazer, não foi então necessario chamar o map
+		// mas chamamos direitamente o forEach no stream
+			restauranteId.stream().forEach(id -> ativar(id));
+	}
+	
+	@Transactional
+	public void inativarMassa(List<Long> restauranteId) {
+			restauranteId.forEach(this::inativar);
+	}
+	
 	//================ ASSOCIAR /DISSOCIAR FORMA PAGAMENTO AO RESTAURANTE======
 	
 	@Transactional
@@ -150,6 +171,24 @@ public class RestauranteService {
 	public void fechar(Long id) {
 		Restaurante restaurante = buscarOuFalhar(id);
 		restaurante.fechar();
+	}
+	
+	//===========ASSOCIAR DISSOCIAR USUARIO AO RESTAURANTE=======================
+	
+	@Transactional
+	public void associarRes (Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		
+		restaurante.associarResponsavel(usuario);
+	}
+	
+	@Transactional
+	public void dissociarRes (Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		
+		restaurante.dissociarResponsavel(usuario);
 	}
 	
 	// CONSULTAR ==================================
