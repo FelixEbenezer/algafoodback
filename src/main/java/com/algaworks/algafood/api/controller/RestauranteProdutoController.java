@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +22,6 @@ import com.algaworks.algafood.api.assembler.ProdutoDtoAssembler;
 import com.algaworks.algafood.api.assembler.ProdutoDtoDisassembler;
 import com.algaworks.algafood.api.model.ProdutoDTO;
 import com.algaworks.algafood.api.model.input.ProdutoInputDTO;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
@@ -47,14 +47,27 @@ public class RestauranteProdutoController {
 	@Autowired
 	private ProdutoRepository produtoRepository; 
 	
-	@GetMapping
+/*	@GetMapping
 	public List<ProdutoDTO> listar (@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		 List<Produto> todosProdutos = produtoRepository.findByRestaurante(restaurante);
-	       
+	//	 List<Produto> todosProdutos = produtoRepository.findByRestaurante(restaurante);
+		 List<Produto> todosProdutos = produtoRepository.findProdutosAtivosByRestaurante(restaurante);
+			     
+		return assembler.toCollectionObject(todosProdutos);
+	}*/
+	
+	@GetMapping
+	public List<ProdutoDTO> listar (@PathVariable Long restauranteId, @RequestParam (required = false) boolean incluirInativos) {
+		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+		 List<Produto> todosProdutos = new ArrayList<>();
+		
+		 if(incluirInativos) {
+			todosProdutos = produtoRepository.findByRestaurante(restaurante);
+		}else {
+			todosProdutos = produtoRepository.findProdutosAtivosByRestaurante(restaurante);
+		}			     
 		return assembler.toCollectionObject(todosProdutos);
 	}
-	
 	
 	
 	@GetMapping("/{produtoId}")

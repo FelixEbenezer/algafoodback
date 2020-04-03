@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,10 +19,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.Valid;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.algaworks.algafood.domain.exception.NegocioException;
 
 @Entity
 @Table
@@ -30,6 +34,8 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String codigo;
 	
 	private BigDecimal subtotal;
 	
@@ -71,6 +77,16 @@ public class Pedido {
 	// a outra relação é feita dentro da table Pedido
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
+
+	
+	
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
 	public Long getId() {
 		return id;
@@ -164,10 +180,12 @@ public class Pedido {
 		return status;
 	}
 
+	//definir este metodo em baixo
+	/*
 	public void setStatus(StatusPedido status) {
 		this.status = status;
 	}
-
+*/
 	public Endereco getEndereco() {
 		return endereco;
 	}
@@ -238,6 +256,60 @@ public class Pedido {
 		}
 	*/
 	
+	// alteracoes de status do pedido
+	
+	//1. refefinimos o metodo setStatus para ser chamado somente dentro dos 
+	// metodos confirmar, cancelar e entregar que vamos criar logo a seguir
+	// e neste metodo definimos tbem a validacao caso nao lancar o NegocioException
+	
+	private void setStatus(StatusPedido novoStatus) {
+		
+		 if(getStatus().naoPodeAlterarPara(novoStatus)) {
+		 throw new NegocioException(String.format("Status de pedido %d não pode ser alterado de %s para %s",
+						getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao()));  
+		}
+		this.status = novoStatus; 
+		}
+
+	//2. criaçao de metodos de alteracaoes de status
+	
+	    public void confirmar() {  // visto e
+		 setStatus(StatusPedido.CONFIRMADO);
+		 setDataConfirmacao(OffsetDateTime.now());
+		}
+	    
+	    public void entregar() {  // visto e
+	    	 setStatus(StatusPedido.ENTREGUE);
+	    	 setDataConfirmacao(OffsetDateTime.now());
+	    	}
+	    
+	    public void cancelar() {  // visto e
+	    	 setStatus(StatusPedido.CANCELADO);
+	    	 setDataConfirmacao(OffsetDateTime.now());
+	    	}
+
+
+	    // UUIID
+	    @PrePersist
+	      private void gerarCodigo() {
+	    	 //setCodigo(UUID.randomUUID().toString()); 
+	    	 setCodigo(geradorChar());
+	    	}
+	    
+	    public String geradorChar(){
+              
+	    	   final Random gerador = new Random();
+	    	   // String codigo = "LDA";
+	    	   String codigo = getEndereco().getCep();
+	    			
+	    	   for(int i=0; i<3; i++) {
+	    	       codigo = codigo.concat(String.valueOf('a'+Math.abs(gerador.nextInt(26))));
+	    	   }
+
+	    	   return codigo;
+	    	}
+
+
 	
 
 }

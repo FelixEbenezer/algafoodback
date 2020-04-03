@@ -3,9 +3,11 @@ package com.algaworks.algafood.api.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+// @JsonFilter("pedidoFilter")
 public class PedidoResumoDTO {
 	
-	private Long id;
+	// private Long id;
+	private String codigo; 
     private BigDecimal subtotal;
     private BigDecimal taxaFrete;
     private BigDecimal valorTotal;
@@ -14,11 +16,11 @@ public class PedidoResumoDTO {
     private RestauranteResumoDTO restaurante;
     private UsuarioDTO cliente;
 
-    public Long getId() {
-		return id;
+    public String getCodigo() {
+		return codigo;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	public BigDecimal getSubtotal() {
 		return subtotal;

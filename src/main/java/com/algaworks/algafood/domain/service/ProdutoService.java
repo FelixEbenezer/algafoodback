@@ -10,7 +10,6 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.ProdutoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
-import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
 @Service
 public class ProdutoService {
@@ -18,8 +17,6 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
-	@Autowired
-	private RestauranteRepository restauranteRepository;
 	
 	public Produto buscarOuFalhar(Long produtoId, Long restauranteId) {
 		return produtoRepository.findById(produtoId, restauranteId)

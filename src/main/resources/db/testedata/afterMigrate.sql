@@ -94,10 +94,10 @@ insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('San
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
 
-insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
     status, data_criacao, subtotal, tx_frete, valor_total)
-values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+values (1,'8511fd72-6e9e-11ea-bc55-0242ac130003', 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
 'CRIADO', utc_timestamp, 298.90, 10, 308.90);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
@@ -107,11 +107,63 @@ insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, 
 values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
 
 
-insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
         endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
         status, data_criacao, subtotal, tx_frete, valor_total)
-values (2, 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+values (2,'2466e688-6ea1-11ea-bc55-0242ac130003', 4, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
 'CRIADO', utc_timestamp, 79, 0, 79);
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, subtotal, tx_frete, valor_total)
+values (3,'LDA93-10897119', 3, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'CRIADO', '2020-02-22 12:20:30', 79, 100, 179);
+
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (4,'LDA93-105119120', 6, 2, 2, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'CRIADO', '2020-01-02 22:00:30', '2020-01-02 21:03:21', '2020-01-03 21:20:10', 79, 200, 279);
+
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (5,'LDA93-105119354', 3, 1, 2, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'ENTREGUE', '2020-03-20 02:00:30', '2020-03-25 21:03:21', '2020-03-30 21:20:10', 79, 200, 279);
+
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (6,'LDA93-105100001', 3, 2, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'ENTREGUE', '2020-03-22 02:00:30', '2020-03-25 21:03:21', '2020-03-30 21:20:10', 79, 200, 279);
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (7,'KIN93-22200121', 2, 2, 1, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'CONFIRMADO', '2020-04-03 02:00:30', '2020-04-03 21:03:21', '2020-04-04 21:20:10', 79, 200, 279);
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (8,'KIN93-105102021', 5, 1, 1, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'ENTREGUE', '2020-03-20 02:00:30', '2020-03-25 21:03:21', '2020-03-30 21:20:10', 79, 200, 279);
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (9,'LDA93-10566666', 6, 1, 1, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'ENTREGUE', '2020-01-11 02:00:30', '2020-01-25 21:03:21', '2020-01-30 21:20:10', 79, 200, 279);
+
+insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+        endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+        status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
+values (10,'LDA93-1000002', 1, 1, 1, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+'CONFIRMADO', '2019-12-20 02:00:30', '2019-12-21 21:03:21', '2019-12-30 21:20:10', 79, 200, 279);
+
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
 values (3, 2, 6, 1, 79, 79, 'Ao ponto');

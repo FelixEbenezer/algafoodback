@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.api.assembler.PermissaoDtoAssembler;
 import com.algaworks.algafood.api.model.PermissaoDTO;
 import com.algaworks.algafood.domain.model.Grupo;
-import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.service.GrupoService;
-import com.algaworks.algafood.domain.service.PermissaoService;
 
 @RestController
 @RequestMapping(value = "/grupos/{grupoId}/permissao")
@@ -28,10 +26,7 @@ public class GrupoPermissaoController {
 	
 	@Autowired
 	private PermissaoDtoAssembler assembler; 
-	
-	@Autowired
-	private PermissaoService permissaoService; 
-	
+		
 	@GetMapping
 	public List<PermissaoDTO> listarPermissaoGrupo(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);

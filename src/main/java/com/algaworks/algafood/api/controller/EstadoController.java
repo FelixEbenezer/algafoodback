@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.EstadoDtoAssembler;
 import com.algaworks.algafood.api.assembler.EstadoDtoDisassembler;
+import com.algaworks.algafood.api.assembler.GenericAssembler;
 import com.algaworks.algafood.api.model.EstadoDTO;
 import com.algaworks.algafood.api.model.input.EstadoInputDTO;
 import com.algaworks.algafood.domain.model.Estado;
@@ -32,6 +33,9 @@ public class EstadoController {
 	private EstadoDtoAssembler assembler; 
 	
 	@Autowired
+	private GenericAssembler<Estado, EstadoDTO> ass; 
+	
+	@Autowired
 	private EstadoDtoDisassembler disassembler; 
 	
 	@Autowired
@@ -39,12 +43,12 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<EstadoDTO> listarEstados() {
-		return assembler.toCollectionDTO(estadoService.listarEstado());
+		return ass.toCollectionDTO(estadoService.listarEstado(), EstadoDTO.class);
 	}
 	
 	@GetMapping("/{id}")
 	public EstadoDTO buscarPorId(@PathVariable Long id) {
-		return assembler.toDTO(estadoService.buscarOuFalhar(id));
+		return ass.toDTO(estadoService.buscarOuFalhar(id), EstadoDTO.class);
 		
 	}
 	

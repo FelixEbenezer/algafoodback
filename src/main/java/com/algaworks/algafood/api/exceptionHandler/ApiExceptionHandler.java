@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,16 +42,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	= "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
 			+ "o problema persistir, entre em contato com o administrador do sistema.";
 
+
+// bindException
+	
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
+			WebRequest request) {
+		// TODO Auto-generated method stub
+		return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+		
+	}
+	
 //MethodArgumentNotValidException
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-	    ProblemaType problemType = ProblemaType.DADOS_INVALIDOS;
+	    return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+	}
+
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request, BindingResult bindingResult) {
+		ProblemaType problemType = ProblemaType.DADOS_INVALIDOS;
 	    String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 	       
-	    BindingResult bindingResult = ex.getBindingResult();
+	    // BindingResult bindingResult = ex.getBindingResult();
 	    
 	    List<Problema.Field> problemFields = bindingResult.getFieldErrors().stream()
 	    		.map(fieldError -> {

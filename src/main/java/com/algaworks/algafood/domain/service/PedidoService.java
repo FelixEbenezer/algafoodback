@@ -19,11 +19,6 @@ import com.algaworks.algafood.domain.repository.PedidoRepository;
 @Service
 public class PedidoService {
 	
-	private static final String MSG_CODE_UTILISE = "Pedido de código %d não pode ser removida, pois está em uso";
-
-	private static final String MSG_CODE_MAL = "LE CODE %d INSÉRÉ ERRONÉ";
-
-
 	@Autowired
 	private PedidoRepository pedidoRepository; 
 	
@@ -50,15 +45,23 @@ public class PedidoService {
 	
 	
 	@Transactional
-	public Pedido buscarPorId(Long pedidoId) {
-		return buscarOufalhar(pedidoId);
+	public Pedido buscarPorId(String codigo) {
+		return buscarOufalhar(codigo);
 	}
 	
+	//novo metodo buscarOufalhar
+
+	public Pedido buscarOufalhar(String codigo) {
+		return pedidoRepository.findByCodigo(codigo)
+				.orElseThrow(()->new PedidoNaoEncontradaException(codigo));
+	}
+	
+	/* ANTIGO 
 	public Pedido buscarOufalhar(Long pedidoId) {
 		return pedidoRepository.findById(pedidoId)
 				.orElseThrow(()->new PedidoNaoEncontradaException(pedidoId));
 	}
-	
+	*/
 		
 	private void validarPedido(Pedido pedido) {
 	    Cidade cidade = cidadeService.buscarOuFalhar(pedido.getEndereco().getCidade().getId());
