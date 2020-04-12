@@ -41,6 +41,7 @@ public class VendaQueryRepImpl implements VendaQueryRep{
 		var selection = builder.construct(VendaDiariaDTO.class,
 				functionDateDataCriacao,
 				//builder.equal(root.get("restaurante"), filtro.getRestauranteId()),
+				root.get("restaurante").get("id"),
 				builder.count(root.get("id")),
 				builder.sum(root.get("valorTotal")));
 		
@@ -64,7 +65,7 @@ public class VendaQueryRepImpl implements VendaQueryRep{
 		
 		query.select(selection);
 		query.where(predicates.toArray(new Predicate[0]));
-		query.groupBy(functionDateDataCriacao);
+		query.groupBy(functionDateDataCriacao, root.get("restaurante").get("id"));
 		
 		return manager.createQuery(query).getResultList();
 		

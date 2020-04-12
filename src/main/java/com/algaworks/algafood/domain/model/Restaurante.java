@@ -32,6 +32,7 @@ import com.algaworks.algafood.core.validation.Groups;
 
 @Entity
 @Table
+// @ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Gratis" )
 public class Restaurante {
 
 	@Id

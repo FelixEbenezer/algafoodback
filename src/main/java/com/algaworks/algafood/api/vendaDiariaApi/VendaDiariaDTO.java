@@ -9,21 +9,21 @@ public class VendaDiariaDTO {
 	private Date data;
 	private Long totalVendas;
 	private BigDecimal totalFaturado;
-	// private Long restauranteId;
+	private Long restauranteId;
 	
-	public VendaDiariaDTO(Date data, /*Long restauranteId,*/ Long totalVendas, BigDecimal totalFaturado) {
+	public VendaDiariaDTO(Date data, Long restauranteId, Long totalVendas, BigDecimal totalFaturado) {
 
-		//this.restauranteId = restauranteId;
+		this.restauranteId = restauranteId;
 		this.data = data;
 		this.totalVendas = totalVendas;
 		this.totalFaturado = totalFaturado;
 	}
-/*	public Long getRestauranteId() {
+	public Long getRestauranteId() {
 		return restauranteId;
 	}
 	public void setRestauranteId(Long restauranteId) {
 		this.restauranteId = restauranteId;
-	}*/
+	}
 	public Date getData() {
 		return data;
 	}
