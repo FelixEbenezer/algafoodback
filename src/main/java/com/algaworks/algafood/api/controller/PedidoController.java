@@ -80,15 +80,19 @@ public class PedidoController {
 		
 		Page<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro),pageable);
 		
-		if(pedidos.getSize() == 0) {
+		if(pedidos.getContent().size() == 0) {
+			
+			if(filtro.getClienteId()!= null) {
 			usuarioRepository.findById(filtro.getClienteId())
 					.orElseThrow(()-> new UsuarioNaoEncontradaException
 					(String.format("Id %d do Usuario inexistente", filtro.getClienteId())));
-					
+			}
+			
+			if(filtro.getRestauranteId()!= null) {
 			restauranteRepository.findById(filtro.getRestauranteId())
 					.orElseThrow(()-> new RestauranteNaoEncontradaException
 					(String.format("Restaurante do Id %d inexistente", filtro.getRestauranteId())));
-
+			}
 		}
 		
 		List<PedidoResumoDTO> pedidosResumoDTO = assemblerPedidoResumo.toCollectionObject(pedidos.getContent());
