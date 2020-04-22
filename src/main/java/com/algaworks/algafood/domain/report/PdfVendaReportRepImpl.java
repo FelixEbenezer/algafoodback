@@ -24,14 +24,14 @@ public class PdfVendaReportRepImpl implements VendaReportRep {
 	public byte[] emitirVendasDiarias(VendaDiariaFilter filtro, String timeOffset) {
 		try {
 			var inputStream = this.getClass().getResourceAsStream(
-					"/relatorios/Vendas-diarias.jasper");
-			
+					"/relatorios/Vendas.jasper");
+			   
 			var vendasDiarias = vendaQueryRep.consultarVendasDiarias(filtro, timeOffset);
 			var dataSource = new JRBeanCollectionDataSource(vendasDiarias);
 			
 			var parametros = new HashMap<String, Object>();
 			parametros.put("REPORT_LOCALE", new Locale("fr", "FR"));
-			
+			    
 			//para adicionar totatais gerias e numero de dias no relatorio
 			parametros.put("TOTAL_GERAL", vendasDiarias.stream()
 					.map(item -> item.getTotalFaturado())
