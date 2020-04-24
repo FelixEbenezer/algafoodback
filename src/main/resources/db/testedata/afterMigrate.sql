@@ -68,8 +68,9 @@ insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 
 
 
 
-insert into usuario (id, nome, email, senha, data_Cadastro) values (1, 'FElix', 'f@g.com', '123',utc_timestamp );
-insert into usuario (id, nome, email, senha, data_Cadastro) values (2, 'Jojo', 'j@g.com', '123',utc_timestamp );
+insert into usuario (id, nome, email, senha, data_Cadastro) values (1, 'FElix', 'felixwhite2008@hotmail.com', '123',utc_timestamp );
+insert into usuario (id, nome, email, senha, data_Cadastro) values (2, 'Jojo', 'felixwhite2008@outlook.com', '123',utc_timestamp );
+insert into usuario (id, nome, email, senha, data_Cadastro) values (3, 'Eben', 'e@gmail.com', '123',utc_timestamp );
 
 insert into usuario (id, nome, email, senha, data_cadastro) values
 (5, 'Manoel Lima', 'manoel.loja@gmail.com', '123', utc_timestamp);
@@ -117,14 +118,14 @@ values (2,'2466e688-6ea1-11ea-bc55-0242ac130003', 4, 1, 2, 1, '38400-111', 'Rua 
 insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
         endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
         status, data_criacao, subtotal, tx_frete, valor_total)
-values (3,'LDA93-10897119', 3, 1, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+values (3,'LDA93-10897119', 3, 2, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
 'CRIADO', '2020-02-22 12:20:30', 79, 100, 179);
 
 
 insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
         endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
         status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
-values (4,'LDA93-105119120', 6, 2, 2, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+values (4,'LDA93-105119120', 6, 2, 3, 2, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
 'CRIADO', '2020-01-02 22:00:30', '2020-01-02 21:03:21', '2020-01-03 21:20:10', 79, 200, 279);
 
 
@@ -144,7 +145,7 @@ values (6,'LDA93-105100001', 3, 2, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2
 insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
         endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
         status, data_criacao, data_confirmacao, data_entrega, subtotal, tx_frete, valor_total)
-values (7,'KIN93-22200121', 2, 2, 1, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+values (7,'KIN93-22200121', 2, 1, 1, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
 'CONFIRMADO', '2020-04-03 02:00:30', '2020-04-03 21:03:21', '2020-04-04 21:20:10', 79, 200, 279);
 
 insert into pedido (id,codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
