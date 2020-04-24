@@ -27,16 +27,19 @@ public class StatusPedidoService {
 		Pedido pedido = pedidoService.buscarOufalhar(codigo); 
 		pedido.confirmar();
 		
-		Set<Pedido> pedidos = new  HashSet<Pedido>();
+		// Set<Pedido> pedidos = new  HashSet<Pedido>();
+		Set<String> p = new HashSet<>();
 		
 		Mensagem mensagem = new Mensagem();
 				mensagem.setAssunto(pedido.getRestaurante().getNome() + " - Pedido confirmado");
 				mensagem.setCorpo("O pedido de código <strong>" 
 						+ pedido.getCodigo() + "</strong> foi confirmado!");
-				mensagem.setDestinatarios(pedidos.stream()
+			/*	mensagem.setDestinatarios(pedidos.stream()
 										.map(item -> item.getCliente().getEmail())
-										 .collect(Collectors.toSet()));
-		
+										 .collect(Collectors.toSet()));*/
+				p.add(pedido.getCliente().getEmail());
+				mensagem.setDestinatarios(p);
+				
 		envioEmail.enviar(mensagem);
 	}
 	
