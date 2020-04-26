@@ -1,5 +1,8 @@
 package com.algaworks.algafood.domain.service;
+import java.util.Map;
 import java.util.Set;
+
+import lombok.Singular;
 
 public interface EnvioEmailService {
 
@@ -13,6 +16,18 @@ public interface EnvioEmailService {
 		
 		private String assunto;
 		private String corpo;
+		
+		@Singular("variavel")
+		private Map<String, Object> variaveis;
+		
+		
+		
+		public Map<String, Object> getVariaveis() {
+			return variaveis;
+		}
+		public void setVariaveis(Map<String, Object> variaveis) {
+			this.variaveis = variaveis;
+		}
 		public Set<String> getDestinatarios() {
 			return destinatarios;
 		}
