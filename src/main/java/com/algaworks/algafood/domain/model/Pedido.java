@@ -250,6 +250,12 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 	    this.valorTotal = this.subtotal.add(this.taxaFrete);
 	}
 	
+	public void dataEntregaFinal() {
+		if(dataConfirmacao != null) {
+		this.dataEntrega = this.dataConfirmacao.plusDays(3);
+		}
+	}
+	
 	/*public void definirFrete() {
 		 setTaxaFrete(getRestaurante().getTaxaFrete());
 		}

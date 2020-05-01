@@ -98,6 +98,7 @@ public class PedidoService {
 
 	    pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
 	    pedido.calcularValorTotal();
+	    pedido.dataEntregaFinal();
 
 	    return pedidoRepository.save(pedido);
 	}

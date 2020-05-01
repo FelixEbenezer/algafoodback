@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.listener;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,6 +32,17 @@ public class NotificacaoClientePedidoConfirmadoListener {
 				mensagem.setAssunto(pedido.getRestaurante().getNome() + " - Pedido confirmado");
 			
 				mensagem.setCorpo("pedido-confirmado.html");
+				
+				//para listar a data de entrega
+				if(pedido.getDataEntrega() != null) {
+				ped.put("data_entrega",pedido.getDataEntrega().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+				}
+		/*		else {
+					String s ="Enviaremos brevemente a data de entrega";
+					ped.put("data_entrega",s);
+							
+				}*/
+				   
 				ped.put("pedido", pedido);
 				
 				mensagem.setVariaveis(ped);

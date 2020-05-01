@@ -6,7 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +29,7 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.service.CidadeService;
 
+// @CrossOrigin
 @RestController
 @RequestMapping("/cidades")
 public class CidadeController {
@@ -38,11 +42,23 @@ public class CidadeController {
 	
 	@Autowired
 	private CidadeService cidadeService;
+
 	
 	@GetMapping
 	public List<CidadeDTO> listar() {
 		return assembler.toCollectionObject(cidadeService.listarCidade());
 	}
+
+	
+/*	@GetMapping
+	public ResponseEntity<List<CidadeDTO>> listar() {
+		List<CidadeDTO> cidadeDTO = assembler.toCollectionObject(cidadeService.listarCidade());
+	 
+		return ResponseEntity.ok()
+					.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8000")
+					.body(cidadeDTO);
+	}*/
+	
 	
 	@GetMapping("/{id}")
 	public CidadeDTO buscarPorId(@PathVariable Long id) {

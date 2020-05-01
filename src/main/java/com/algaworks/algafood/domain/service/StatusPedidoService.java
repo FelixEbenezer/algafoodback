@@ -47,7 +47,7 @@ public class StatusPedidoService {
 			
 				mensagem.setCorpo("pedido-confirmado.html");
 				ped.put("pedido", pedido);
-				
+				 
 			//	ped.put("Total Geral",pedido.getValorTotal());
 			//	ped.put("Formas de pagamento", pedido.getFormaPagamento());
 			//	ped.put("Data de entrega", pedido.getDataEntrega());
