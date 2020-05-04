@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -163,6 +164,11 @@ public class RestauranteService {
 	@Transactional
 	public void abrir(Long id) {
 		Restaurante restaurante = buscarOuFalhar(id);
+		
+		   if(!restaurante.getAtivo()) {
+		    	throw new NegocioException(String.format("O restaurante %s está inativo, não dá para abrir lo",
+		                restaurante.getNome())); 
+		    }
 		restaurante.abrir();
 	}
 	

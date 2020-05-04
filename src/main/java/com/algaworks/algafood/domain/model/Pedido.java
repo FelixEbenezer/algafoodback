@@ -250,11 +250,11 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 	    this.valorTotal = this.subtotal.add(this.taxaFrete);
 	}
 	
-	public void dataEntregaFinal() {
-		if(dataConfirmacao != null) {
-		this.dataEntrega = this.dataConfirmacao.plusDays(3);
+/*	public void dataEntregaFinal() {
+		if(this.dataCriacao != null && this.dataEntrega == null) {
+		this.dataEntrega = this.dataCriacao.plusDays(3);
 		}
-	}
+	}*/
 	
 	/*public void definirFrete() {
 		 setTaxaFrete(getRestaurante().getTaxaFrete());
@@ -274,7 +274,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 	private void setStatus(StatusPedido novoStatus) {
 		
 		 if(getStatus().naoPodeAlterarPara(novoStatus)) {
-		 throw new NegocioException(String.format("Status de pedido %d não pode ser alterado de %s para %s",
+		 throw new NegocioException(String.format("Status de pedido %s não pode ser alterado de %s para %s",
 						getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao()));  
 		}
 		this.status = novoStatus; 

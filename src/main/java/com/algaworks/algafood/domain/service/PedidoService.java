@@ -74,6 +74,13 @@ public class PedidoService {
 	    pedido.setRestaurante(restaurante);
 	    pedido.setFormaPagamento(formaPagamento);
 	    
+	    if(!restaurante.getAberto()) {
+	    	throw new NegocioException(String.format("O restaurante %s está fechado, não dá para abrir o pedido",
+	                restaurante.getNome())); 
+	    }
+	    
+	 
+	    
 	    if (restaurante.naoAceitaFormaPagamento(formaPagamento)) {
 	        throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
 	                formaPagamento.getDescricao()));
@@ -98,8 +105,8 @@ public class PedidoService {
 
 	    pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
 	    pedido.calcularValorTotal();
-	    pedido.dataEntregaFinal();
-
+	   // pedido.dataEntregaFinal();
+	    
 	    return pedidoRepository.save(pedido);
 	}
 

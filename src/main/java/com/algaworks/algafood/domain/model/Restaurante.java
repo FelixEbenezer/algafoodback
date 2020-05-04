@@ -27,13 +27,15 @@ import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import com.algaworks.algafood.core.validation.Groups;
+import com.algaworks.algafood.domain.event.RestauranteFechadoEvent;
 
 @Entity
 @Table
 // @ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Gratis" )
-public class Restaurante {
+public class Restaurante extends AbstractAggregateRoot<Restaurante> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -234,11 +236,13 @@ public class Restaurante {
 	}
 	
 	public void abrir() {
+		
 		setAberto(true);
 	}
 	
 	public void fechar() {
 		setAberto(false);
+		registerEvent(new RestauranteFechadoEvent(this));
 	}
 	
 	public boolean associarResponsavel (Usuario usuario) {
