@@ -1,9 +1,13 @@
 package com.algaworks.algafood.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class EstadoDTO {
 
+	@ApiModelProperty(example = "1")
 	private Long id; 
 	
+	@ApiModelProperty(example = "Cacuaco")
 	private String nome;
 
 	public Long getId() {

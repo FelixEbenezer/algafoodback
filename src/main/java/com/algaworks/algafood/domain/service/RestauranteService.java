@@ -176,6 +176,8 @@ public class RestauranteService {
 	public void fechar(Long id) {
 		Restaurante restaurante = buscarOuFalhar(id);
 		restaurante.fechar();
+		
+		restauranteRepository.save(restaurante);
 	}
 	
 	//===========ASSOCIAR DISSOCIAR USUARIO AO RESTAURANTE=======================

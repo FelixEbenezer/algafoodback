@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+
 @RestController
 @RequestMapping("/cidadesClient")
 public class CidadeClientController {
@@ -18,7 +19,9 @@ public class CidadeClientController {
 	
 	@GetMapping
 	public List<CidadeClientModel> listarCidadeClient() {
+
 		return cidadeClient.listar();
+
 	}
 
 }

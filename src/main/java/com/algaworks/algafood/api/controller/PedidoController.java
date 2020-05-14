@@ -42,6 +42,9 @@ import com.algaworks.algafood.domain.service.PedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping(value = "/pedidos")
 public class PedidoController {
@@ -74,6 +77,12 @@ public class PedidoController {
 
 	// com paginacao
 	@GetMapping
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(value="Nome das propriedades para filtro",
+		name="campos",
+		paramType= "query",
+		type = "String")
+	})
 	public Page<PedidoResumoDTO> consular(PedidoFilter filtro,@PageableDefault(size = 3, sort = "dataCriacao") Pageable pageable) {
 		
 		pageable = traduzirPageable(pageable);

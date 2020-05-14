@@ -3,11 +3,15 @@ package com.algaworks.algafood.api.model.input;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class CidadeInputDTO {
 	
+	@ApiModelProperty(example = "Cacuaco")
 	@NotNull
 	private String nome; 
 	
+	@ApiModelProperty(example = "1")
 	@NotNull
 	@Valid
 	private EstadoIdInput estado;

@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,13 +24,14 @@ import com.algaworks.algafood.api.assembler.CozinhaDtoAssembler;
 import com.algaworks.algafood.api.assembler.CozinhaDtoDisassembler;
 import com.algaworks.algafood.api.model.CozinhaDTO;
 import com.algaworks.algafood.api.model.input.CozinhaInputDTO;
+import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 	
 	@Autowired
 	private CozinhaDtoAssembler assembler; 
@@ -62,7 +62,7 @@ public class CozinhaController {
 	
 	// com DTO e Paginacao
 		@GetMapping
-		public Page<CozinhaDTO> listarCozinha(@PageableDefault(size = 2)Pageable pageable) {
+		public Page<CozinhaDTO> listar(@PageableDefault(size = 2)Pageable pageable) {
 			Page<Cozinha> cozinhas = cozinhaRepository.findAll(pageable);
 			List<CozinhaDTO> cozinhasDTo = assembler.toCollectionDTO(cozinhas.getContent());
 			
@@ -86,13 +86,13 @@ public class CozinhaController {
 	
 	// com DTO
 	@PostMapping
-	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CozinhaDTO> adicionarCozinha(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
 		 Cozinha cozinha1 = disassembler.toDomainObject(cozinhaInputDTO);
 		 CozinhaDTO coz = assembler.toDTO(cozinhaService.salvar(cozinha1));
 		 
  
-		 return ResponseEntity.status(HttpStatus.CREATED).body(coz);
+		 return coz;
 	}
 
 // ================== FIN ADICIONAR ==============================================
@@ -203,7 +203,7 @@ public class CozinhaController {
 	// com DTO
 	
 	@GetMapping("/{id}")
-	public CozinhaDTO buscarPorId(@PathVariable Long id) {
+	public CozinhaDTO buscar(@PathVariable Long id) {
 		return  assembler.toDTO(cozinhaService.buscarOuFalhar(id));
 		
 	}

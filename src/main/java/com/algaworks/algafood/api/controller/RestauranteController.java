@@ -42,6 +42,9 @@ import com.algaworks.algafood.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping("/restaurantes")
 public class RestauranteController {
@@ -73,6 +76,10 @@ public class RestauranteController {
 		return assembler.toCollectionDTO(restauranteService.listarRestaurante());
 	}*/
 	
+	@ApiImplicitParams({
+		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
+		name= "projecao", paramType = "query", type="string")
+	})
 	@GetMapping
 	public MappingJacksonValue listar (@RequestParam (required = false) String projecao) {
 		
