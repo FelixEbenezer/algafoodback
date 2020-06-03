@@ -12,7 +12,9 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.ReflectionUtils;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -27,8 +29,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembler.RestauranteApenasNomeModelAssembler;
+import com.algaworks.algafood.api.assembler.RestauranteBasicoModelAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteDtoAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteDtoDisassembler;
+import com.algaworks.algafood.api.model.RestauranteApenasNomeModel;
+import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteDTO;
 import com.algaworks.algafood.api.model.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.model.view.RestauranteView;
@@ -38,6 +44,7 @@ import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +66,16 @@ public class RestauranteController {
 	public RestauranteService restauranteService;
 	
 	
+	@Autowired
+	private RestauranteBasicoModelAssembler restauranteBasicoModelAssembler;
+
+	@Autowired
+	private RestauranteApenasNomeModelAssembler restauranteApenasNomeModelAssembler;  
+	
+	@Autowired
+	private RestauranteRepository restauranteRepository;
+	
+	
 /*	@GetMapping
 	public List<RestauranteDTO> listar () {
 		return assembler.toCollectionDTO(restauranteService.listarRestaurante());
@@ -75,6 +92,20 @@ public class RestauranteController {
 	public List<RestauranteDTO> listarApenasNome () {
 		return assembler.toCollectionDTO(restauranteService.listarRestaurante());
 	}*/
+
+	
+/*	@ApiImplicitParams({
+		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
+		name= "projecao", paramType = "query", type="string")
+	})
+	@GetMapping(params = "projecao=completo")
+	public CollectionModel<RestauranteDTO> listarCompleto () {
+		
+	//	List<Restaurante> restaurantes = restauranteService.listarRestaurante();
+	//	CollectionModel<RestauranteDTO> restaurantesDTO = assembler.toCollectionModel(restaurantes);
+		
+		return assembler.toCollectionModel(restauranteService.listarRestaurante());
+	}*/
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
@@ -84,7 +115,43 @@ public class RestauranteController {
 	public MappingJacksonValue listar (@RequestParam (required = false) String projecao) {
 		
 		List<Restaurante> restaurantes = restauranteService.listarRestaurante();
-		List<RestauranteDTO> restaurantesDTO = assembler.toCollectionDTO(restaurantes);
+		CollectionModel<RestauranteDTO> restaurantesDTO = assembler.toCollectionModel(restaurantes);
+		
+		MappingJacksonValue restauranteWrapper = new MappingJacksonValue(restaurantesDTO);
+		
+		
+	   if("completo".equals(projecao)) {
+			restauranteWrapper.setSerializationView(RestauranteDTO.class);
+			
+		}
+		
+		return restauranteWrapper; 
+	}
+	
+
+    @GetMapping(params = "projecao=resumo")
+    public CollectionModel<RestauranteBasicoModel> listarResumo() {
+        return restauranteBasicoModelAssembler
+                .toCollectionModel(restauranteRepository.findAll());
+    }
+    
+
+    @GetMapping(params = "projecao=apenas-nome")
+    public CollectionModel<RestauranteApenasNomeModel> listarApenasNomes() {
+        return restauranteApenasNomeModelAssembler
+                .toCollectionModel(restauranteRepository.findAll());
+    }
+	
+	
+/*	@ApiImplicitParams({
+		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
+		name= "projecao", paramType = "query", type="string")
+	})
+	@GetMapping
+	public MappingJacksonValue listar (@RequestParam (required = false) String projecao) {
+		
+		List<Restaurante> restaurantes = restauranteService.listarRestaurante();
+		CollectionModel<RestauranteDTO> restaurantesDTO = assembler.toCollectionModel(restaurantes);
 		
 		MappingJacksonValue restauranteWrapper = new MappingJacksonValue(restaurantesDTO);
 		
@@ -101,7 +168,7 @@ public class RestauranteController {
 		}
 		
 		return restauranteWrapper; 
-	}
+	}*/
 	
 	
 		
@@ -111,7 +178,7 @@ public class RestauranteController {
 		try {
 			
 			Restaurante restaurante = disassembler.toDomainObject(restauranteInputDTO);
-		return assembler.toDTO(restauranteService.adicionarRestaurante(restaurante));
+		return assembler.toModel(restauranteService.adicionarRestaurante(restaurante));
 		
 		// return ResponseEntity.status(HttpStatus.CREATED).body(restaurante1);
 		}
@@ -169,7 +236,7 @@ public class RestauranteController {
 			
 			Restaurante restaurante = restauranteService.buscarOuFalhar(id);
 			
-			return assembler.toDTO(restaurante);
+			return assembler.toModel(restaurante);
 
 		}
 
@@ -248,7 +315,7 @@ public class RestauranteController {
 				//		"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 				
 			 try {
-				 return assembler.toDTO(restauranteService.adicionarRestaurante(restauranteAtual));
+				 return assembler.toModel(restauranteService.adicionarRestaurante(restauranteAtual));
 				// return restauranteAtual;
 			 } catch (EntidadeNaoEncontradaException e) {
 				throw new NegocioException(e.getMessage());
@@ -312,9 +379,10 @@ public class RestauranteController {
 	
 	@PutMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void ativarMassa(@RequestBody List<Long> restauranteIds) {
+	public ResponseEntity<Void> ativarMassa(@RequestBody List<Long> restauranteIds) {
 		try {
 		restauranteService.ativarMassa(restauranteIds);
+		return ResponseEntity.noContent().build();
 		}catch (RestauranteNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
@@ -322,9 +390,10 @@ public class RestauranteController {
 	
 	@DeleteMapping("/ativacoes")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void inativarMassa(@RequestBody List<Long> restauranteIds) {
+	public ResponseEntity<Void> inativarMassa(@RequestBody List<Long> restauranteIds) {
 		try {
 		restauranteService.inativarMassa(restauranteIds);
+		return ResponseEntity.noContent().build();
 		}catch (RestauranteNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}

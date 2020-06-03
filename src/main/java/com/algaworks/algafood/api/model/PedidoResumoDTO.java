@@ -3,8 +3,10 @@ package com.algaworks.algafood.api.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import org.springframework.hateoas.RepresentationModel;
+
 // @JsonFilter("pedidoFilter")
-public class PedidoResumoDTO {
+public class PedidoResumoDTO extends RepresentationModel<PedidoResumoDTO> {
 	
 	// private Long id;
 	private String codigo; 
@@ -15,6 +17,8 @@ public class PedidoResumoDTO {
     private OffsetDateTime dataCriacao;
     private RestauranteResumoDTO restaurante;
     private UsuarioDTO cliente;
+    
+    
 
     public String getCodigo() {
 		return codigo;

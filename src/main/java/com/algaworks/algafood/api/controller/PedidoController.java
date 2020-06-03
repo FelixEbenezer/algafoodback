@@ -2,16 +2,17 @@ package com.algaworks.algafood.api.controller;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +70,9 @@ public class PedidoController {
 	
 	@Autowired
 	private RestauranteRepository restauranteRepository; 
+	
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler; 
 
 	/*	@GetMapping
 	public List<PedidoResumoDTO> consular() {
@@ -76,7 +80,7 @@ public class PedidoController {
 	}*/
 
 	// com paginacao
-	@GetMapping
+/*	@GetMapping
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(value="Nome das propriedades para filtro",
 		name="campos",
@@ -110,10 +114,47 @@ public class PedidoController {
 				                            pageable, pedidos.getTotalElements());
 		
 		return pedidosPage; 
-	}
+	}*/
+	
+	// com PagedModel
+		@GetMapping
+		@ApiImplicitParams({ 
+			@ApiImplicitParam(value="Nome das propriedades para filtro",
+			name="campos",
+			paramType= "query",
+			type = "String")
+		})
+		public PagedModel<PedidoResumoDTO> consular(PedidoFilter filtro,@PageableDefault(size = 3, sort = "dataCriacao") Pageable pageable) {
+			
+			pageable = traduzirPageable(pageable);
+			
+			Page<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro),pageable);
+			
+			if(pedidos.getContent().size() == 0) {
+				
+				if(filtro.getClienteId()!= null) {
+				usuarioRepository.findById(filtro.getClienteId())
+						.orElseThrow(()-> new UsuarioNaoEncontradaException
+						(String.format("Id %d do Usuario inexistente", filtro.getClienteId())));
+				}
+				
+				if(filtro.getRestauranteId()!= null) {
+				restauranteRepository.findById(filtro.getRestauranteId())
+						.orElseThrow(()-> new RestauranteNaoEncontradaException
+						(String.format("Restaurante do Id %d inexistente", filtro.getRestauranteId())));
+				}
+			}
+			//Page<PedidoResumoDTO> pedidosPage = new PageImpl<>(pedidosResumoDTO, pageable, pedidos.getTotalElements());
+			// não há necessidade de fazer new PageImpl<> para ter getNumberElements,
+			//porque isso já vem automaticamente implementado no PagedModel
+			PagedModel<PedidoResumoDTO> pedidosPagedDTO = pagedResourcesAssembler.toModel(pedidos, assemblerPedidoResumo);
+			
+			return pedidosPagedDTO; 
+		}
 
 	//com Total Geral de todos valorTotal
-	@GetMapping("total-geral")
+	//@GetMapping("total-geral")
+		@GetMapping(params = "pes=total-geral")
 	public Map<String, Object> pesquisar(PedidoFilter filtro, 
 			@PageableDefault(size = 10) Pageable pageable) {
 		pageable = traduzirPageable(pageable);
@@ -121,14 +162,17 @@ public class PedidoController {
 		Page<Pedido> pedidosPage = pedidoRepository.findAll(
 				PedidoSpecs.usandoFiltro(filtro), pageable);
 		
-		List<PedidoResumoDTO> pedidosResumoModel = assemblerPedidoResumo
-				.toCollectionObject(pedidosPage.getContent());
-				
+		CollectionModel<PedidoResumoDTO> pedidosResumoModel = assemblerPedidoResumo
+				.toCollectionModel(pedidosPage.getContent());
+		
+		
 		Map<String, Object> json = new LinkedHashMap<>();
 		json.put("content", pedidosResumoModel);
 		json.put("size", pedidosPage.getSize());
 		json.put("numberOfElements", pedidosPage.getTotalElements());
-		json.put("totalGeral", pedidosResumoModel.stream().map(item-> item.getValorTotal()).reduce(BigDecimal.ZERO,BigDecimal::add));
+		json.put("totalGeral", pedidosResumoModel.getContent().stream()
+								.map(item-> item.getValorTotal())
+								.reduce(BigDecimal.ZERO,BigDecimal::add) );
 			
 		return json;
 	}
@@ -191,7 +235,7 @@ public class PedidoController {
 	
 	@GetMapping("/{codigo}")
 	public PedidoDTO buscarPor (@PathVariable String codigo) {
-		return assemblerPedido.toDTO(pedidoService.buscarPorId(codigo));
+		return assemblerPedido.toModel(pedidoService.buscarPorId(codigo));
 	}
 	
 	@PostMapping
@@ -205,7 +249,7 @@ public class PedidoController {
 	        
 	        
 	        
-			return assemblerPedido.toDTO(pedidoService.emitir(pedido));
+			return assemblerPedido.toModel(pedidoService.emitir(pedido));
 		}
 		catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());

@@ -43,6 +43,15 @@ public enum StatusPedido {
 		this.descricao = descricao;
 	}
 	
+	//links
+/*	public boolean naoPodeAlterarPara(StatusPedido novoStatus) {
+		return !novoStatus.statusAnteriores.contains(this);
+	}*/
+	
+	public boolean podeAlterarPara(StatusPedido novoStatus) {
+		return !naoPodeAlterarPara(novoStatus);
+	}
+	
 	
 	
 }

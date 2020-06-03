@@ -3,40 +3,39 @@ package com.algaworks.algafood.api.model;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.algaworks.algafood.api.model.view.RestauranteView;
-import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-public class RestauranteDTO {
+@Relation(collectionRelation = "restaurantes")
+public class RestauranteDTO extends RepresentationModel<RestauranteDTO> {
 	
-	@JsonView(RestauranteView.Resumo.class)
+//	@JsonView(RestauranteView.Resumo.class)
 	private Long id;
 	
-	@JsonView({RestauranteView.Resumo.class, RestauranteView.ApenasNome.class})
+//	@JsonView({RestauranteView.Resumo.class, RestauranteView.ApenasNome.class})
 	private String nome; 
 	
-	@JsonView(RestauranteView.Resumo.class)
+//	@JsonView(RestauranteView.Resumo.class)
 	private BigDecimal precoFrete;
 	
-	@JsonView(RestauranteView.Resumo.class)
+//	@JsonView(RestauranteView.Resumo.class)
 	private CozinhaDTO cozinha;
 	
 	private Boolean ativo;
 	
 	private Boolean aberto; 
 	
-	public Boolean getAberto() {
-		return aberto;
-	}
-
-	public void setAberto(Boolean aberto) {
-		this.aberto = aberto;
-	}
-
 	private EnderecoDTO endereco; 
 	
 	private List<FormaPagamentoDTO> formasPagamento; 
 	
-/*	private List<FormaPagamento> formasPagamento;
+
+	
+	
+	
+	
+	
+	/*	private List<FormaPagamento> formasPagamento;
 
 	public List<FormaPagamento> getFormasPagamento() {
 		return formasPagamento;
@@ -47,6 +46,14 @@ public class RestauranteDTO {
 	}
 */
 	
+	public Boolean getAberto() {
+		return aberto;
+	}
+
+	public void setAberto(Boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	
 	public List<FormaPagamentoDTO> getFormasPagamento() {
 		return formasPagamento;

@@ -2,7 +2,9 @@ package com.algaworks.algafood.api.model;
 
 import java.time.OffsetDateTime;
 
-public class GetStatusPedidoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class GetStatusPedidoDTO extends RepresentationModel<GetStatusPedidoDTO> {
 
 	private OffsetDateTime dataCriacao;
     private OffsetDateTime dataConfirmacao;

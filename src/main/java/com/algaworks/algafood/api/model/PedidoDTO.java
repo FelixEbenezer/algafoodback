@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public class PedidoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class PedidoDTO extends RepresentationModel<PedidoDTO> {
 	
 	// private Long id;
 	private String codigo; 

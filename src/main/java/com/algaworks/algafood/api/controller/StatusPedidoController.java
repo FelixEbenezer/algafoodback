@@ -1,7 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,30 +27,37 @@ public class StatusPedidoController {
 	
 	@PutMapping("/confirmar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void confirmar(@PathVariable String codigo) {
+	public ResponseEntity<Void> confirmar(@PathVariable String codigo) {
 		
 		statusPedidoService.confirmar(codigo);
+		return ResponseEntity.noContent().build();
 		
 	}
 	
 	@PutMapping("/entregar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void entregar(@PathVariable String codigo) {
+	public ResponseEntity<Void> entregar(@PathVariable String codigo) {
 		
 		statusPedidoService.entregar(codigo);
-		
+		return ResponseEntity.noContent().build();
+
 	}
 	
 	@PutMapping("/cancelar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void cancelar(@PathVariable String codigo) {
+	public ResponseEntity<Void> cancelar(@PathVariable String codigo) {
 		
 		statusPedidoService.cancelar(codigo);
-		
+		return ResponseEntity.noContent().build();
+
 	}
 	
 	@GetMapping("/status")
 	public GetStatusPedidoDTO buscarPorId (@PathVariable String codigo) {
-		return assemblerGetStatus.toDTO(statusPedidoService.buscarPorId(codigo));
+		//implementar adicionar links aqui sel e Rel
+		GetStatusPedidoDTO statusdto= assemblerGetStatus.toDTO(statusPedidoService.buscarPorId(codigo));
+		statusdto.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(StatusPedidoController.class).buscarPorId(codigo)).withSelfRel());
+		
+		return statusdto; 
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,14 +40,14 @@ public class UsuarioController {
 	private UsuarioDtoDisassembler disassembler; 
 	
 	@GetMapping
-	public List<UsuarioDTO> listar () {
-		return assembler.toCollectionObject(usuarioService.listarUsuario());
+	public CollectionModel<UsuarioDTO> listar () {
+		return assembler.toCollectionModel(usuarioService.listarUsuario());
 	}
 	
 	
 	@GetMapping("/{id}")
 	public UsuarioDTO buscarPorId(@PathVariable Long id) {
-		return assembler.toDTO(usuarioService.buscarOuFalhar(id));
+		return assembler.toModel(usuarioService.buscarOuFalhar(id));
 	}
 	
 	
@@ -54,7 +55,7 @@ public class UsuarioController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDTO adicionar (@RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
 		Usuario usuario = disassembler.toDomainObject(usuarioInputDTO);
-		UsuarioDTO usuarioDTO = assembler.toDTO(usuarioService.adicionarUsuario(usuario));
+		UsuarioDTO usuarioDTO = assembler.toModel(usuarioService.adicionarUsuario(usuario));
 		return usuarioDTO; 
 	}
 	
@@ -63,7 +64,7 @@ public class UsuarioController {
 	public UsuarioDTO atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioAtualizarInputDTO usuarioAtualizarInputDTO) {
 		Usuario usuario = usuarioService.buscarOuFalhar(id);
 		disassembler.copyToDomainObject(usuarioAtualizarInputDTO, usuario);
-		return assembler.toDTO(usuarioService.adicionarUsuario(usuario));
+		return assembler.toModel(usuarioService.adicionarUsuario(usuario));
 	}
 	
 	

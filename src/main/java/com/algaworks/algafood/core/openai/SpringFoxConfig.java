@@ -1,5 +1,10 @@
 package com.algaworks.algafood.core.openai;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,11 +23,11 @@ import com.algaworks.algafood.api.model.CozinhaDTO;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.apiexterno.problem.Problem;
+import com.amazonaws.auth.policy.Resource;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -51,7 +56,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.build()
 				.apiInfo(apiInfo())
 				.useDefaultResponseMessages(false)
-				.ignoredParameterTypes(ServletWebRequest.class)
+				.ignoredParameterTypes(ServletWebRequest.class,
+						URL.class, URI.class, URLStreamHandler.class, Resource.class,
+						File.class, InputStream.class)
 				.globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
 				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
 	            .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())

@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class EnderecoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class EnderecoDTO extends RepresentationModel<EnderecoDTO> {
 
 	private String cep;
 	private String logradouro;

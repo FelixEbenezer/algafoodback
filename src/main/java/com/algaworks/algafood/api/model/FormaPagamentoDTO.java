@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class FormaPagamentoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class FormaPagamentoDTO extends RepresentationModel<FormaPagamentoDTO> {
 	
 	private Long id;
 	

@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class CidadeDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class CidadeDTO extends RepresentationModel<CidadeDTO> {
 	
 	private Long id; 
 	

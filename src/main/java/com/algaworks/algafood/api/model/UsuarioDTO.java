@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class UsuarioDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class UsuarioDTO extends RepresentationModel<UsuarioDTO> {
 
 	private Long id; 
 	
