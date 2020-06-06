@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.assembler.UsuarioDtoAssembler;
 import com.algaworks.algafood.api.model.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -27,10 +28,21 @@ public class RestauranteUsuarioResponsavelController {
 	@Autowired
 	private UsuarioDtoAssembler assemblerUsuario; 
 	
+	@Autowired
+	private AlgaLinks algaLinks; 
+	
 	@GetMapping
 	public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId){
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		return assemblerUsuario.toCollectionModel(restaurante.getResponsaveis());
+		CollectionModel<UsuarioDTO> responsaveisDTO = assemblerUsuario.toCollectionModel(restaurante.getResponsaveis())
+																	 .removeLinks()
+																	 .add(algaLinks.linkToRestauranteResponsaveis(restauranteId))
+																	 .add(algaLinks.linkToRestauranteResponsavelAssociacao(restauranteId));
+		responsaveisDTO.getContent().forEach(
+				item -> {item.add(algaLinks.linkToRestauranteResponsavelDissociar(restauranteId, item.getId()));}
+				);
+		
+		return responsaveisDTO;
 	}
 	
 	@DeleteMapping("/{usuarioId}")

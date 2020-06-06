@@ -34,8 +34,14 @@ public class RestauranteDtoAssembler extends RepresentationModelAssemblerSupport
 		restauranteDTO.add(algaLinks.linkToRestaurantesSelf());
 		restauranteDTO.add(algaLinks.linkToRestaurantes());
 		restauranteDTO.getCozinha().add(algaLinks.linkToCozinha(restauranteDTO.getCozinha().getId()));
-		restauranteDTO.getEndereco().getCidade().add(algaLinks.linkToCidadeSelf(restauranteDTO.getEndereco().getCidade().getId()));
 		
+		
+		// links para o id de ciade para evitar o null pointer 
+		
+		if (restauranteDTO.getEndereco() != null && restauranteDTO.getEndereco().getCidade() != null) {
+			restauranteDTO.getEndereco().getCidade().add(algaLinks.linkToCidadeSelf(restauranteDTO.getEndereco().getCidade().getId()));
+	    }
+				
 		restauranteDTO.getFormasPagamento().forEach(item -> {
 			item.add(algaLinks.linkToFormaPagamentoSelf(restauranteDTO.getId(), item.getId()));
 		});
@@ -43,6 +49,31 @@ public class RestauranteDtoAssembler extends RepresentationModelAssemblerSupport
 		restauranteDTO.add(algaLinks.linkToFormaPagamentoRel(restauranteDTO.getId()));
 		
 		restauranteDTO.add(algaLinks.linkToRestauranteResponsaveis(restauranteDTO.getId()));
+		
+		//Links para abrir/fechar e ativar/inativar restaurantes
+		if (restaurante.ativacaoPermitida()) {
+			restauranteDTO.add(
+					algaLinks.linkToRestauranteAtivacao(restaurante.getId(), "inativar"));
+		}
+
+		if (restaurante.inativacaoPermitida()) {
+			restauranteDTO.add(
+					algaLinks.linkToRestauranteInativacao(restaurante.getId(), "ativar"));
+		}
+
+		if (restaurante.aberturaPermitida()) {
+			restauranteDTO.add(
+					algaLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+		}
+
+		if (restaurante.fechamentoPermitido()) {
+			restauranteDTO.add(
+					algaLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+		}
+		
+		//links para produtos por restauantes
+		restauranteDTO.add(algaLinks.linkToProdutos(restaurante.getId(), "produtos"));
+	    
 		
 					
 		return restauranteDTO; 

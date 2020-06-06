@@ -31,6 +31,23 @@ public class EstatisticasController {
 	@Autowired
 	private VendaReportRep vendaReportRep; 
 	
+	/*	@Autowired
+	private AlgaLinks algaLinks;
+	
+	public static class VendaDiariaDTO extends RepresentationModel<VendaDiariaDTO> {
+	}
+
+	@Override
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public VendaDiariaDTO estatisticas() {
+	    var estatisticasModel = new VendaDiariaDTO();
+	    
+	    estatisticasModel.add(algaLinks.linkToEstatisticasVendasDiarias("vendas-diarias"));
+	    
+	    return estatisticasModel;
+	}*/  
+	
+	
 	/*
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<VendaDiariaDTO> consultarVendas (VendaDiariaFilter filtro, 

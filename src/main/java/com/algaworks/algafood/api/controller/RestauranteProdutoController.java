@@ -1,11 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.assembler.ProdutoDtoAssembler;
 import com.algaworks.algafood.api.assembler.ProdutoDtoDisassembler;
 import com.algaworks.algafood.api.model.ProdutoDTO;
@@ -47,6 +49,9 @@ public class RestauranteProdutoController {
 	@Autowired
 	private ProdutoRepository produtoRepository; 
 	
+	@Autowired
+	private AlgaLinks algaLinks; 
+	
 /*	@GetMapping
 	public List<ProdutoDTO> listar (@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
@@ -57,16 +62,18 @@ public class RestauranteProdutoController {
 	}*/
 	
 	@GetMapping
-	public List<ProdutoDTO> listar (@PathVariable Long restauranteId, @RequestParam (required = false) boolean incluirInativos) {
+	public CollectionModel<ProdutoDTO> listar (@PathVariable Long restauranteId, @RequestParam (required = false) Boolean incluirInativos) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		 List<Produto> todosProdutos = new ArrayList<>();
+		// List<Produto> todosProdutos = new ArrayList<>();
+		List<Produto> todosProdutos = null;
 		
 		 if(incluirInativos) {
 			todosProdutos = produtoRepository.findByRestaurante(restaurante);
 		}else {
 			todosProdutos = produtoRepository.findProdutosAtivosByRestaurante(restaurante);
 		}			     
-		return assembler.toCollectionObject(todosProdutos);
+		return assembler.toCollectionModel(todosProdutos)
+				.add(algaLinks.linkToProdutos(restauranteId));
 	}
 	
 	
@@ -76,7 +83,7 @@ public class RestauranteProdutoController {
 		// Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
 		
-		return assembler.toDTO(produto);
+		return assembler.toModel(produto);
 	}
 	
 	
@@ -88,7 +95,7 @@ public class RestauranteProdutoController {
 		// try {
 		Produto produto = disassembler.toDomainObject(produtoInputDTO);
 		produto.setRestaurante(restaurante);
-		return assembler.toDTO(produtoService.salvar(produto));
+		return assembler.toModel(produtoService.salvar(produto));
 		//}catch (EntidadeNaoEncontradaException e) {
 		//throw new NegocioException(e.getMessage());
 		//}
@@ -103,7 +110,7 @@ public class RestauranteProdutoController {
 		disassembler.copyToDomainObject(produtoInputDTO, produto);
 		produto = produtoService.salvar(produto); 
 		
-		return assembler.toDTO(produto); 
+		return assembler.toModel(produto); 
 	}
 	
 	//=================ATIVAR / DESATIVAR ===============================

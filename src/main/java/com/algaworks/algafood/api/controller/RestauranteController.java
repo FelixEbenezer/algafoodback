@@ -37,7 +37,6 @@ import com.algaworks.algafood.api.model.RestauranteApenasNomeModel;
 import com.algaworks.algafood.api.model.RestauranteBasicoModel;
 import com.algaworks.algafood.api.model.RestauranteDTO;
 import com.algaworks.algafood.api.model.input.RestauranteInputDTO;
-import com.algaworks.algafood.api.model.view.RestauranteView;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -94,23 +93,24 @@ public class RestauranteController {
 	}*/
 
 	
-/*	@ApiImplicitParams({
+	@ApiImplicitParams({
 		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
 		name= "projecao", paramType = "query", type="string")
 	})
 	@GetMapping(params = "projecao=completo")
+	//@GetMapping()
 	public CollectionModel<RestauranteDTO> listarCompleto () {
 		
 	//	List<Restaurante> restaurantes = restauranteService.listarRestaurante();
 	//	CollectionModel<RestauranteDTO> restaurantesDTO = assembler.toCollectionModel(restaurantes);
 		
 		return assembler.toCollectionModel(restauranteService.listarRestaurante());
-	}*/
-	
+	}
+/*	
 	@ApiImplicitParams({
 		@ApiImplicitParam(value="Nome da projecao de restaurantes", allowableValues = "apenas-nome, completo",
 		name= "projecao", paramType = "query", type="string")
-	})
+	})*/
 	@GetMapping
 	public MappingJacksonValue listar (@RequestParam (required = false) String projecao) {
 		
@@ -195,14 +195,16 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}/abertura")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void abrir(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> abrir(@PathVariable Long restauranteId) {
 		restauranteService.abrir(restauranteId);
+		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{restauranteId}/fecho")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void fechar(@PathVariable Long restauranteId) {
+	public ResponseEntity<Void> fechar(@PathVariable Long restauranteId) {
 		restauranteService.fechar(restauranteId);
+		return ResponseEntity.ok().build();
 	}
 	
 	
@@ -365,14 +367,16 @@ public class RestauranteController {
 	
 	@PutMapping("/{id}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void ativarRestaurante (@PathVariable Long id) {
+	public ResponseEntity<Void> ativarRestaurante (@PathVariable Long id) {
 		restauranteService.ativar(id);
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void inativarRestaurante (@PathVariable Long id) {
+	public ResponseEntity<Void> inativarRestaurante (@PathVariable Long id) {
 		restauranteService.inativar(id);
+		return ResponseEntity.ok().build();
 	}
 	
 	//============ATIVACAO INATIVACAO EM MASSA======================

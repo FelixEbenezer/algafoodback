@@ -11,16 +11,23 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Links;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.algaworks.algafood.api.model.CidadeDTO;
 import com.algaworks.algafood.api.model.CozinhaDTO;
+import com.algaworks.algafood.api.model.EstadoDTO;
+import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
+import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
 import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.apiexterno.problem.Problem;
 import com.amazonaws.auth.policy.Resource;
@@ -69,9 +76,15 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 						.parameterType("query").modelRef(new ModelRef("String")).build()))*/
 	            .additionalModels(typeResolver.resolve(Problem.class))
 	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-	            .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasModelOpenApi.class))
+	            .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+	            .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, CozinhaDTO.class), CozinhasModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(CollectionModel.class, CidadeDTO.class), CidadesModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
+	                    EstadosModelOpenApi.class))
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	            	//	new Tag("Grupos", "Gerencia os grupos de usuários"),
+	            		new Tag("Permissões", "Gerencia as permissões"),
 	                    new Tag("Cozinhas", "Gerencia as cozinhas"));
 	}
 	

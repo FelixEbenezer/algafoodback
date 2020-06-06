@@ -56,9 +56,10 @@ public class PedidoDtoAssembler extends RepresentationModelAssemblerSupport<Pedi
 		pedidoDTO.add(algaLinks.linkToPedidos());
 		
 	//	pedidoDTO.add(algaLinks.linkToPedidos().withRel("total-geral"));
-	//	pedidoDTO.add(algaLinks.linkToPedidosTotal().withSelfRel("total-geral"));
-		
+	//	pedidoDTO.add(algaLinks.linkToPedidosTotal().withSelfRel("total-geral"));		
 	//	pedidoDTO.add(WebMvcLinkBuilder.linkTo(PedidoController.class).withRel("total-geral"));
+		
+		pedidoDTO.add(algaLinks.linkToPedidosTotal());
 		
 	
 		

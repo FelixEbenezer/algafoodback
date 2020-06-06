@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api;
 
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
@@ -10,11 +11,19 @@ import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.api.controller.CidadeController;
 import com.algaworks.algafood.api.controller.CozinhaController;
+import com.algaworks.algafood.api.controller.FormaPagamentoController;
+import com.algaworks.algafood.api.controller.GrupoController;
+import com.algaworks.algafood.api.controller.GrupoPermissaoController;
 import com.algaworks.algafood.api.controller.PedidoController;
+import com.algaworks.algafood.api.controller.PermissaoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
+import com.algaworks.algafood.api.controller.RestauranteProdutoController;
+import com.algaworks.algafood.api.controller.RestauranteProdutoFotoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
+import com.algaworks.algafood.api.controller.UsuarioGrupoController;
+import com.algaworks.algafood.api.vendaDiariaApi.EstatisticasController;
 
 
 @Component
@@ -24,6 +33,10 @@ public class AlgaLinks {
 			new TemplateVariable("page", VariableType.REQUEST_PARAM),
 			new TemplateVariable("size", VariableType.REQUEST_PARAM),
 			new TemplateVariable("sort", VariableType.REQUEST_PARAM));
+   
+   public static final TemplateVariables PROJECAO_VARIABLES = new TemplateVariables(
+			new TemplateVariable("projecao", VariableType.REQUEST_PARAM)); 
+
 
 	
 	public Link linkToPedidos() {
@@ -40,12 +53,15 @@ public class AlgaLinks {
 		return new Link(UriTemplate.of(pedidosUrl,(PAGES_VARIABLES.concat(filtroPedido))), "pedidos");
 	}
 	
+	//link para o metodo listar com total-geral
+		
 	public Link linkToPedidosTotal() {
-		TemplateVariables filtroTotalGeral = new TemplateVariables(
-				new TemplateVariable("pes=total-geral", VariableType.REQUEST_PARAM));
+	//	TemplateVariables filtroTotalGeral = new TemplateVariables(
+	//			new TemplateVariable("total-geral", VariableType.REQUEST_PARAM));
 
-		String doPedido = linkToPedidos().toString();
-		return new Link(UriTemplate.of(doPedido,(filtroTotalGeral)), "total-geral");
+		String doPedido = linkToPedidos().toString()+ "/total-geral";
+		return new Link(UriTemplate.of(doPedido), "total-geral").withRel("total-geral");
+		
 	}
 	
 	//LINK DE CLIENTEID
@@ -73,15 +89,26 @@ public class AlgaLinks {
 	
 	//links de restaurantes
 	
-	public Link linkToRestaurantes() {
+/*	public Link linkToRestaurantes() {
 	    return WebMvcLinkBuilder.linkTo(RestauranteController.class).withRel("restaurantes");
+	}*/
+	
+	public Link linkToRestaurantes() {
+	    String restaurantesUrl = WebMvcLinkBuilder.linkTo(RestauranteController.class).toUri().toString();
+	    
+	    return new Link(UriTemplate.of(restaurantesUrl, PROJECAO_VARIABLES), "restaurantes");
 	}
+
 
 	public Link linkToRestaurantesSelf() {
 	    return WebMvcLinkBuilder.linkTo(RestauranteController.class).withSelfRel();
 	}
 
+	//links para cozinhas
 	
+	public Link linkToCozinhas(String rel) {
+	    return WebMvcLinkBuilder.linkTo(CozinhaController.class).withRel(rel);
+	}
 	public Link linkToCozinha(Long cozinhaId) {
 	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CozinhaController.class)
 	            .buscar(cozinhaId)).withRel("cozinhas");
@@ -115,5 +142,159 @@ public class AlgaLinks {
 		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
 	    		.listar(restauranteId)).withRel("responsaveis");
 	}
+	
+	
+	
+	//LINKS para ativar/inativar e abrir/fechar restaurantes:
+	//Vamos adicionar métodos para criação dos links necessários.
+
+	public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
+	            .abrir(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteFechamento(Long restauranteId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
+	            .fechar(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteInativacao(Long restauranteId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
+	            .inativarRestaurante(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
+	            .ativarRestaurante(restauranteId)).withRel(rel);
+	}
+	
+	//links para forma de pagamento
+	public Link linkToRestauranteFormasPagamento(Long restauranteId) {
+	    return linkToFormaPagamentoRel(restauranteId);
+	}
+
+	public Link linkToFormasPagamento(String rel) {
+	    return WebMvcLinkBuilder.linkTo(FormaPagamentoController.class).withRel(rel);
+	}
+
+	public Link linkToFormasPagamento() {
+	    return linkToFormasPagamento(IanaLinkRelations.SELF.value());
+	} 
+	
+	//link para dissociar/associar formaPagamentos ao restaurante
+	public Link linkToRestauranteFormasPagamentoDissociar(Long restauranteId, Long formaPagamentoId) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormaPagamentoController.class).dissociar(restauranteId, formaPagamentoId))
+	    		.withRel("associar");
+	}
+	
+	public Link linkToRestauranteFormasPagamentoAssociar(Long restauranteId) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormaPagamentoController.class)
+	    		.associar(restauranteId, null))
+	    		.withRel("dissociar");
+	}
+	
+	//links para associar/dissociar responsaveis/clientes ao determinado restaurante
+	public Link linkToRestauranteResponsavelDissociar(Long restauranteId, Long usuarioId) {
+
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
+		            .dissociarRes(restauranteId, usuarioId)).withRel("dissociar");
+		}
+
+		public Link linkToRestauranteResponsavelAssociacao(Long restauranteId) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
+		            .associarRes(restauranteId, null)).withRel("associar");
+		}
+		
+	//links para produtos por restaurantes
+		
+		public Link linkToProdutos(Long restauranteId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteProdutoController.class)
+		            .listar(restauranteId, null)).withRel(rel);
+		}
+
+		public Link linkToProdutos(Long restauranteId) {
+		    return linkToProdutos(restauranteId, IanaLinkRelations.SELF.value());
+		}
+		
+		
+				
+	//links para foto de produto de restaurante
+		public Link linkToFotoProduto(Long restauranteId, Long produtoId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteProdutoFotoController.class)
+		            .buscar(restauranteId, produtoId)).withRel(rel);
+		}
+
+		public Link linkToFotoProduto(Long restauranteId, Long produtoId) {
+		    return linkToFotoProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
+		}
+
+		
+	//links para grupos
+		public Link linkToGrupos(String rel) {
+		    return WebMvcLinkBuilder.linkTo(GrupoController.class).withRel(rel);
+		}
+
+		public Link linkToGrupos() {
+		    return linkToGrupos(IanaLinkRelations.SELF.value());
+		}
+
+		public Link linkToGrupoPermissoes(Long grupoId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+		    		.listar(grupoId)).withRel(rel);
+		} 
+		
+	
+	//links para permissao e grupopermissao
+		public Link linkToPermissoes(String rel) {
+		    return WebMvcLinkBuilder.linkTo(PermissaoController.class).withRel(rel);
+		}
+
+		public Link linkToPermissoes() {
+		    return linkToPermissoes(IanaLinkRelations.SELF.value());
+		}
+
+		public Link linkToGrupoPermissoes(Long grupoId) {
+		    return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+		}
+
+		public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+		            .associar(grupoId, null)).withRel(rel);
+		}
+
+		public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+		            .dissociar(grupoId, permissaoId)).withRel(rel);
+		}
+		
+		//links de associar e dissociars usuarios a grupos
+		public Link linkToUsuarioGrupoAssociacao(Long usuarioId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class)
+		            .associarGrupo(usuarioId, null)).withRel(rel);
+		}
+
+		public Link linkToUsuarioGrupoDesassociacao(Long usuarioId, Long grupoId, String rel) {
+		    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class)
+		            .dissociarGrupo(usuarioId, grupoId)).withRel(rel);
+		}
+		
+		//links para estatisticas
+		
+		public Link linkToEstatisticas(String rel) {
+		    return WebMvcLinkBuilder.linkTo(EstatisticasController.class).withRel(rel);
+		}
+
+		public Link linkToEstatisticasVendasDiarias(String rel) {
+		    TemplateVariables filtroVariables = new TemplateVariables(
+		            new TemplateVariable("restauranteId", VariableType.REQUEST_PARAM),
+		            new TemplateVariable("dataCriacaoInicio", VariableType.REQUEST_PARAM),
+		            new TemplateVariable("dataCriacaoFim", VariableType.REQUEST_PARAM),
+		            new TemplateVariable("timeOffset", VariableType.REQUEST_PARAM));
+		    
+		    String pedidosUrl = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstatisticasController.class)
+		    		.consultarVendasDiariasPdf(null, null)).toUri().toString()+"/vendas-diarias";
+		    
+		    return new Link(UriTemplate.of(pedidosUrl, filtroVariables), rel);
+		}   
 
 }

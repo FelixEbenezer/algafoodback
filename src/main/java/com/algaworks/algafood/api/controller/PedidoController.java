@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -153,8 +154,8 @@ public class PedidoController {
 		}
 
 	//com Total Geral de todos valorTotal
-	//@GetMapping("total-geral")
-		@GetMapping(params = "pes=total-geral")
+	@GetMapping("total-geral")
+	//	@GetMapping(params = "pes=total-geral")
 	public Map<String, Object> pesquisar(PedidoFilter filtro, 
 			@PageableDefault(size = 10) Pageable pageable) {
 		pageable = traduzirPageable(pageable);
@@ -166,6 +167,7 @@ public class PedidoController {
 				.toCollectionModel(pedidosPage.getContent());
 		
 		
+			
 		Map<String, Object> json = new LinkedHashMap<>();
 		json.put("content", pedidosResumoModel);
 		json.put("size", pedidosPage.getSize());

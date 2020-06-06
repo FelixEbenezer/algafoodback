@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class GrupoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class GrupoDTO extends RepresentationModel<GrupoDTO> {
 	
 	private Long id; 
 	

@@ -1,7 +1,5 @@
 package com.algaworks.algafood.api.assembler;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +8,10 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.controller.UsuarioController;
-import com.algaworks.algafood.api.model.PedidoDTO;
 import com.algaworks.algafood.api.model.PedidoResumoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
 
@@ -22,6 +20,9 @@ public class PedidoResumoDtoAssembler extends RepresentationModelAssemblerSuppor
 
 	@Autowired
 	private ModelMapper modelMapper; 
+	
+	@Autowired
+	private AlgaLinks algaLinks; 
 	
 	public PedidoResumoDtoAssembler() {
 		super(PedidoController.class, PedidoResumoDTO.class);
@@ -44,6 +45,10 @@ public class PedidoResumoDtoAssembler extends RepresentationModelAssemblerSuppor
 		//fizemos com o restaurante
 		pedidoResumoDto.getCliente().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class)
 				.buscarPorId(pedido.getCliente().getId())).withSelfRel());
+		
+		
+		//o link para metodo listar com total-geral
+		pedidoResumoDto.add(algaLinks.linkToPedidosTotal());
 				
 		return pedidoResumoDto; 
 	}

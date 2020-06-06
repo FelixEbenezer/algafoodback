@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class FormaPagamentoController {
 	}*/
 	
 	@GetMapping
-	public ResponseEntity<List<FormaPagamentoDTO>> listar () {
-		List<FormaPagamentoDTO> formaPagamentoDTO =  assembler.toCollectionObject(formaPagamentoService.listarFormaPagamento());
+	public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar () {
+		CollectionModel<FormaPagamentoDTO> formaPagamentoDTO =  assembler.toCollectionModel(formaPagamentoService.listarFormaPagamento());
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
 				.body(formaPagamentoDTO);
@@ -59,7 +60,7 @@ public class FormaPagamentoController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long id) {
-		FormaPagamentoDTO formaDTO= assembler.toDTO(formaPagamentoService.buscarOuFalhar(id));
+		FormaPagamentoDTO formaDTO= assembler.toModel(formaPagamentoService.buscarOuFalhar(id));
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
 				.body(formaDTO);
@@ -69,7 +70,7 @@ public class FormaPagamentoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
 		FormaPagamento formaPagamento = disassembler.toDomainObject(formaPagamentoInputDTO);
-		FormaPagamentoDTO formaPagamentoDTO = assembler.toDTO(formaPagamentoService.adicionarFormaPagamento(formaPagamento));
+		FormaPagamentoDTO formaPagamentoDTO = assembler.toModel(formaPagamentoService.adicionarFormaPagamento(formaPagamento));
 		return formaPagamentoDTO;
 	}
 	
@@ -77,7 +78,7 @@ public class FormaPagamentoController {
 	public FormaPagamentoDTO atualizar (@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO, @PathVariable Long id) {
 		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(id);
 		disassembler.copyToDomainObject(formaPagamentoInputDTO, formaPagamento);
-		return assembler.toDTO(formaPagamentoService.adicionarFormaPagamento(formaPagamento));
+		return assembler.toModel(formaPagamentoService.adicionarFormaPagamento(formaPagamento));
 	}
 	
 	@DeleteMapping("/{id}")

@@ -227,14 +227,6 @@ public class Restaurante extends AbstractAggregateRoot<Restaurante> {
 		setAtivo(false);
 	}
 	
-	public Boolean associarFormaPagamento(FormaPagamento formaPagamento) {
-		return getFormasPagamento().add(formaPagamento);
-	}
-	
-	public Boolean dissociarFormaPagamento(FormaPagamento formaPagamento) {
-		return getFormasPagamento().remove(formaPagamento);
-	}
-	
 	public void abrir() {
 		
 		setAberto(true);
@@ -244,6 +236,15 @@ public class Restaurante extends AbstractAggregateRoot<Restaurante> {
 		setAberto(false);
 		registerEvent(new RestauranteFechadoEvent(this));
 	}
+	
+	public Boolean associarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().add(formaPagamento);
+	}
+	
+	public Boolean dissociarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().remove(formaPagamento);
+	}
+	
 	
 	public boolean associarResponsavel (Usuario usuario) {
 		return getResponsaveis().add(usuario);
@@ -261,5 +262,39 @@ public class Restaurante extends AbstractAggregateRoot<Restaurante> {
 
 	public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
 	    return !aceitaFormaPagamento(formaPagamento);
+	}
+	
+	//regras de negocio para links de abertura/fecho ou inativacao/ativacao do restaurante
+	
+	public boolean isAberto() {
+		return this.aberto;
+	}
+
+	public boolean isFechado() {
+		return !isAberto();
+	}
+
+	public boolean isInativo() {
+		return !isAtivo();
+	}
+
+	public boolean isAtivo() {
+		return this.ativo;
+	}
+	
+	public boolean aberturaPermitida() {
+		return isAtivo() && isFechado();
+	}
+	
+	public boolean ativacaoPermitida() {
+		return isInativo();
+	}
+	
+	public boolean inativacaoPermitida() {
+		return isAtivo();
+	}
+	
+	public boolean fechamentoPermitido() {
+		return isAberto();
 	}
 }

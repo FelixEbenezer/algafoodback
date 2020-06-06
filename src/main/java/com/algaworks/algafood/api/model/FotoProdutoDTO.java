@@ -1,8 +1,10 @@
 package com.algaworks.algafood.api.model;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import io.swagger.annotations.ApiModelProperty;
 
-public class FotoProdutoDTO {
+public class FotoProdutoDTO extends RepresentationModel<FotoProdutoDTO> {
 
 /*	private String nomeArquivo;
 	private String descricao;

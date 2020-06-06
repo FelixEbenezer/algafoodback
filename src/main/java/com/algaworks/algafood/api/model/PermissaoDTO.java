@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.model;
 
-public class PermissaoDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class PermissaoDTO extends RepresentationModel<PermissaoDTO> {
 	
 		private Long id;
 			
