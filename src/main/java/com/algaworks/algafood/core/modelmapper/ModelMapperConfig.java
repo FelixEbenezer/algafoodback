@@ -4,10 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.algaworks.algafood.api.model.FormaPagamentoDTO;
-import com.algaworks.algafood.api.model.PedidoDTO;
-import com.algaworks.algafood.api.model.RestauranteDTO;
-import com.algaworks.algafood.api.model.input.ItemInputDTO;
+import com.algaworks.algafood.api.v1.model.FormaPagamentoDTO;
+import com.algaworks.algafood.api.v1.model.PedidoDTO;
+import com.algaworks.algafood.api.v1.model.RestauranteDTO;
+import com.algaworks.algafood.api.v1.model.input.ItemInputDTO;
+import com.algaworks.algafood.api.v2.model.input.CidadeInputDTOV2;
+import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.ItemPedido;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -36,6 +38,10 @@ public class ModelMapperConfig {
 		
 		modelMapper.createTypeMap(Pedido.class, PedidoDTO.class)
 		.addMapping(Pedido::getEndereco, PedidoDTO::setEnderecoEntrega);
+		
+		
+
+       modelMapper.createTypeMap(CidadeInputDTOV2.class, Cidade.class).addMappings(mapper->mapper.skip(Cidade::setId));
 		
 		
 		return modelMapper;

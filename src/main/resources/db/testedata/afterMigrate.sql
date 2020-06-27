@@ -68,8 +68,8 @@ insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 
 
 
 
-insert into usuario (id, nome, email, senha, data_Cadastro) values (1, 'FElix', 'ngangalixcomercial@gmail.com', '123',utc_timestamp );
-insert into usuario (id, nome, email, senha, data_Cadastro) values (2, 'Jojo', 'felixwhite2008@outlook.com', '123',utc_timestamp );
+insert into usuario (id, nome, email, senha, data_Cadastro) values (1, 'FElix', 'ngangalixcomercial@gmail.com', '$2y$12$41UzpL2Rj3uir76.LAISnOQUO0Vbf.usH3pTOhz9TJOnKv.4isyye',utc_timestamp );
+insert into usuario (id, nome, email, senha, data_Cadastro) values (2, 'Jojo', 'felixwhite2008@outlook.com', '$2y$12$41UzpL2Rj3uir76.LAISnOQUO0Vbf.usH3pTOhz9TJOnKv.4isyye',utc_timestamp );
 insert into usuario (id, nome, email, senha, data_Cadastro) values (3, 'Eben', 'e@gmail.com', '123',utc_timestamp );
 
 insert into usuario (id, nome, email, senha, data_cadastro) values

@@ -21,20 +21,21 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.algaworks.algafood.api.model.CidadeDTO;
-import com.algaworks.algafood.api.model.CozinhaDTO;
-import com.algaworks.algafood.api.model.EstadoDTO;
-import com.algaworks.algafood.api.openapi.model.CidadesModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.CozinhasModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.EstadosModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.LinksModelOpenApi;
-import com.algaworks.algafood.api.openapi.model.PageableModelOpenApi;
+import com.algaworks.algafood.api.v1.model.CidadeDTO;
+import com.algaworks.algafood.api.v1.model.CozinhaDTO;
+import com.algaworks.algafood.api.v1.model.EstadoDTO;
+import com.algaworks.algafood.api.v1.openapi.model.CidadesModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.CozinhasModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.EstadosModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.LinksModelOpenApi;
+import com.algaworks.algafood.api.v1.openapi.model.PageableModelOpenApi;
 import com.algaworks.algafood.apiexterno.problem.Problem;
 import com.amazonaws.auth.policy.Resource;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -53,15 +54,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SpringFoxConfig implements WebMvcConfigurer {
 	
 	@Bean
-	public Docket apiDocket() {
+	public Docket apiDocketV1() {
 		var typeResolver = new TypeResolver();
 		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("V1")
 				.select()
 					//.apis(RequestHandlerSelectors.any())
 				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+				.paths(PathSelectors.ant("/v1/**"))
+				
 
 				.build()
-				.apiInfo(apiInfo())
+				.apiInfo(apiInfoV1())
 				.useDefaultResponseMessages(false)
 				.ignoredParameterTypes(ServletWebRequest.class,
 						URL.class, URI.class, URLStreamHandler.class, Resource.class,
@@ -87,6 +91,50 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 	            		new Tag("Permissões", "Gerencia as permissões"),
 	                    new Tag("Cozinhas", "Gerencia as cozinhas"));
 	}
+	
+	@Bean
+	public Docket apiDocketV2() {
+		var typeResolver = new TypeResolver();
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("V2")
+				.select()
+					//.apis(RequestHandlerSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+				.paths(PathSelectors.ant("/v2/**"))
+				
+
+				.build()
+				.apiInfo(apiInfoV2())
+				.useDefaultResponseMessages(false)
+				.ignoredParameterTypes(ServletWebRequest.class,
+						URL.class, URI.class, URLStreamHandler.class, Resource.class,
+						File.class, InputStream.class)
+				.globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
+	            .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
+	            .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+	          /*  .globalOperationParameters(Arrays.asList(new ParameterBuilder()
+						.name("campos")
+						.description("Nome para filtro de respostas de propriedades")
+						.parameterType("query").modelRef(new ModelRef("String")).build()))*/
+	            .additionalModels(typeResolver.resolve(Problem.class))
+	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+	            .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+	            
+	   /*         .alternateTypeRules(AlternateTypeRules.newRule(
+	            	    typeResolver.resolve(PagedModel.class, CozinhaModelV2.class),
+	            	    CozinhasModelV2OpenApi.class))
+
+	            	.alternateTypeRules(AlternateTypeRules.newRule(
+	            	        typeResolver.resolve(CollectionModel.class, CidadeModelV2.class),
+	            	        CidadesModelV2OpenApi.class))  */
+	            
+	            .tags(new Tag("Cidades", "Gerencia as cidades"),
+	            	//	new Tag("Grupos", "Gerencia os grupos de usuários"),
+	            		  new Tag("Cozinhas", "Gerencia as cozinhas"));
+	}
+
+	
 	
 	private List<ResponseMessage> globalGetResponseMessages() {
 		 return Arrays.asList(
@@ -148,7 +196,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 	
-	public ApiInfo apiInfo() {
+	public ApiInfo apiInfoV1() {
 		return new ApiInfoBuilder()
 				.title("Ngangalix Algafood")
 				.description("API de aberta para clientes e restaurantes")
@@ -156,5 +204,15 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 				.contact(new Contact("Ngangalix Comercial", "ngangalixcom.herokuapp.com", "n@gmail.com"))
 				.build();
 	}
+	
+	public ApiInfo apiInfoV2() {
+		return new ApiInfoBuilder()
+				.title("Ngangalix Algafood")
+				.description("API de aberta para clientes e restaurantes VERSAO 2")
+				.version("2")
+				.contact(new Contact("Ngangalix Comercial", "ngangalixcom.herokuapp.com", "n@gmail.com"))
+				.build();
+	}
+
 
 }
