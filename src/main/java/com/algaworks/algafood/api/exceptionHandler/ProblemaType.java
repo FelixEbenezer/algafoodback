@@ -8,6 +8,7 @@ ENTIDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
 ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio"),
 PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro do URI inválido"),
 ERRO_DO_SISTEMA("/erro-sistema", "Erro do sistema"),
+ACESSO_NEGADO("/acesso-negado", "Acesso negado"),
 MSG_COMPLEXO("/Msg-complexo", "Msg incompreensivel");
 
 private String title;

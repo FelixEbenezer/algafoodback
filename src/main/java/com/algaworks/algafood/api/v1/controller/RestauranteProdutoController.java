@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.v1.assembler.ProdutoDtoAssembler;
 import com.algaworks.algafood.api.v1.assembler.ProdutoDtoDisassembler;
 import com.algaworks.algafood.api.v1.model.ProdutoDTO;
 import com.algaworks.algafood.api.v1.model.input.ProdutoInputDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
@@ -61,6 +62,7 @@ public class RestauranteProdutoController {
 		return assembler.toCollectionObject(todosProdutos);
 	}*/
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping
 	public CollectionModel<ProdutoDTO> listar (@PathVariable Long restauranteId, @RequestParam (required = false) Boolean incluirInativos) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
@@ -76,7 +78,7 @@ public class RestauranteProdutoController {
 				.add(algaLinks.linkToProdutos(restauranteId));
 	}
 	
-	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping("/{produtoId}")
 	public ProdutoDTO listarProdutoPorRestaurante(@PathVariable Long restauranteId, 
 			@PathVariable Long produtoId) {
@@ -86,7 +88,7 @@ public class RestauranteProdutoController {
 		return assembler.toModel(produto);
 	}
 	
-	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionar (@PathVariable Long restauranteId, @Valid @RequestBody ProdutoInputDTO produtoInputDTO) {
@@ -101,6 +103,7 @@ public class RestauranteProdutoController {
 		//}
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping("/{produtoId}")
 	public ProdutoDTO atualizar (@PathVariable Long produtoId, 
 			                     @PathVariable Long restauranteId, 
@@ -115,12 +118,14 @@ public class RestauranteProdutoController {
 	
 	//=================ATIVAR / DESATIVAR ===============================
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping("/{produtoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void ativar(@PathVariable Long produtoId, @PathVariable Long restauranteId) {
 		produtoService.ativar(restauranteId, produtoId);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping("/{produtoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long produtoId, @PathVariable Long restauranteId) {

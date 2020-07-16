@@ -18,6 +18,8 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
                  RestauranteRepositoryQueries,
                  JpaSpecificationExecutor<Restaurante>{
 	
+	boolean existsResponsavel(Long restauranteId, Long usuarioId);
+	
 	@Query("from Restaurante r join fetch r.cozinha ")
 	List<Restaurante> findAll();
 	

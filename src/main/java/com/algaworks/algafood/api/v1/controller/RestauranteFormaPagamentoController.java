@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.api.v1.AlgaLinks;
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoAssembler;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.RestauranteService;
 
@@ -39,6 +40,8 @@ public class RestauranteFormaPagamentoController {
 	}*/
 	
 	//com links dissociar
+	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping
 	public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId); 
@@ -55,7 +58,7 @@ public class RestauranteFormaPagamentoController {
 		return formasPagamentoDTO;
 	}
 	
-	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> associar (@PathVariable Long restauranteId,@PathVariable Long formaPagamentoId) {
@@ -63,6 +66,7 @@ public class RestauranteFormaPagamentoController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> dissociar (@PathVariable Long restauranteId,@PathVariable Long formaPagamentoId) {

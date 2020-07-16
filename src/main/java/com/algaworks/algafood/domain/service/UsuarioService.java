@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,9 @@ public class UsuarioService {
 
 	private static final String MSG_CODE_MAL = "LE CODE %d INSÉRÉ ERRONÉ";
 
-
+	@Autowired
+	private PasswordEncoder passwordEncoder; 
+	
 	@Autowired
 	private UsuarioRepository usuarioRepository; 
 	
@@ -50,6 +53,11 @@ public class UsuarioService {
 		if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
 			throw new NegocioException(String.format("ja existe alguém com sgte email %s", usuario.getEmail()));
 		}
+		
+		if(usuario.isNovo()) {
+			usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+		}
+		
 		return usuarioRepository.save(usuario);
 	}
 	
@@ -73,11 +81,13 @@ public class UsuarioService {
 	public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha) {
 		Usuario usuario = buscarOuFalhar(usuarioId);
 		
-		if (usuario.senhaNaoCoincideCom(senhaAtual)) {
+		//if (usuario.senhaNaoCoincideCom(senhaAtual))
+		if (!passwordEncoder.matches(senhaAtual, usuario.getSenha()))
+		{
 			throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
 		}
 		
-		usuario.setSenha(novaSenha);
+		usuario.setSenha(passwordEncoder.encode(novaSenha));
 	}
 	
 	

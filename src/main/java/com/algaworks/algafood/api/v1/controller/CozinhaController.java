@@ -13,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import com.algaworks.algafood.api.v1.assembler.CozinhaDtoDisassembler;
 import com.algaworks.algafood.api.v1.model.CozinhaDTO;
 import com.algaworks.algafood.api.v1.model.input.CozinhaInputDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
@@ -81,8 +84,17 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		}*/
 	
 	// com DTO e PagedModel
+			@CheckSecurity.Cozinhas.PodeConsultar
+			//@PreAuthorize("isAuthenticated()")
 			@GetMapping
 			public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 2)Pageable pageable) {
+			
+				System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+				/*System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
+				System.out.println(SecurityContextHolder.getContext().getAuthentication().getDetails());
+				System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+				System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());*/
+				
 				logger.info("Consultando cozinhas");
 				
 				Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
@@ -107,13 +119,17 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	}*/
 	
 	// com DTO
+	@CheckSecurity.Cozinhas.PodeEditar
+//	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+//	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 		 Cozinha cozinha1 = disassembler.toDomainObject(cozinhaInputDTO);
 		 CozinhaDTO coz = assembler.toModel(cozinhaService.salvar(cozinha1));
 		 
- 
+  
 		 return coz;
 	}
 
@@ -153,7 +169,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	}*/
 	
 	// com DTO
-	
+	@CheckSecurity.Cozinhas.PodeEditar
+//	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@PutMapping("/{id}")
 	public CozinhaDTO atualizar (@PathVariable Long id, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
 		
@@ -189,6 +206,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	}*/
 	
 // A VERSÃO SIMPLIFICADA =============================================
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover (@PathVariable Long id){
@@ -223,7 +241,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	}*/
 	
 	// com DTO
-	
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@GetMapping("/{id}")
 	public CozinhaDTO buscar(@PathVariable Long id) {
 		return  assembler.toModel(cozinhaService.buscarOuFalhar(id));

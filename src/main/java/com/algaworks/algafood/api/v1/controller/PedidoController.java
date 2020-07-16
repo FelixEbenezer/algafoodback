@@ -29,6 +29,7 @@ import com.algaworks.algafood.api.v1.model.PedidoDTO;
 import com.algaworks.algafood.api.v1.model.PedidoResumoDTO;
 import com.algaworks.algafood.api.v1.model.input.PedidoInputDTO;
 import com.algaworks.algafood.core.data.PageableTranslator;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
@@ -50,6 +51,9 @@ import io.swagger.annotations.ApiImplicitParams;
 @RequestMapping(value = "/v1/pedidos")
 public class PedidoController {
 
+	@Autowired
+	private AlgaSecurity algaSecurity; 
+	
 	@Autowired
 	private PedidoDtoAssembler assemblerPedido;
 	
@@ -246,8 +250,9 @@ public class PedidoController {
 			Pedido pedido = disassemblerPedido.toDomainObject(pedidoInputDTO);
 			
 			pedido.setCliente(new Usuario());
-	        pedido.getCliente().setId(1L);
-	        
+	      //  pedido.getCliente().setId(1L);
+			  pedido.getCliente().setId(algaSecurity.getUsuarioId());
+		      
 	        
 	        
 			return assemblerPedido.toModel(pedidoService.emitir(pedido));
