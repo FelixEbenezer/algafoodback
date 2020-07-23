@@ -22,6 +22,7 @@ import com.algaworks.algafood.api.v1.model.UsuarioDTO;
 import com.algaworks.algafood.api.v1.model.input.UsuarioAtualizarInputDTO;
 import com.algaworks.algafood.api.v1.model.input.UsuarioInputDTO;
 import com.algaworks.algafood.api.v1.model.input.UsuarioSenhaInputDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.UsuarioService;
 
@@ -38,12 +39,14 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioDtoDisassembler disassembler; 
 	
+	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public CollectionModel<UsuarioDTO> listar () {
 		return assembler.toCollectionModel(usuarioService.listarUsuario());
 	}
 	
-	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping("/{id}")
 	public UsuarioDTO buscarPorId(@PathVariable Long id) {
 		return assembler.toModel(usuarioService.buscarOuFalhar(id));
@@ -58,7 +61,7 @@ public class UsuarioController {
 		return usuarioDTO; 
 	}
 	
-	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{id}")
 	public UsuarioDTO atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioAtualizarInputDTO usuarioAtualizarInputDTO) {
 		Usuario usuario = usuarioService.buscarOuFalhar(id);
@@ -66,18 +69,19 @@ public class UsuarioController {
 		return assembler.toModel(usuarioService.adicionarUsuario(usuario));
 	}
 	
-	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover (@PathVariable Long id) {
 		usuarioService.removerUsuario(id);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioSenhaInputDTO senha) {
 		usuarioService.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getSenhaNova());
 	}
-
+ 
 
 }

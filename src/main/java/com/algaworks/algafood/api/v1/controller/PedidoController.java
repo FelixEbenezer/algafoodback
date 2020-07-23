@@ -30,6 +30,7 @@ import com.algaworks.algafood.api.v1.model.PedidoResumoDTO;
 import com.algaworks.algafood.api.v1.model.input.PedidoInputDTO;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.core.security.AlgaSecurity;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
@@ -121,6 +122,7 @@ public class PedidoController {
 	}*/
 	
 	// com PagedModel
+	    @CheckSecurity.Pedidos.PodePesquisar
 		@GetMapping
 		@ApiImplicitParams({ 
 			@ApiImplicitParam(value="Nome das propriedades para filtro",
@@ -157,6 +159,7 @@ public class PedidoController {
 		}
 
 	//com Total Geral de todos valorTotal
+	@CheckSecurity.Pedidos.PodePesquisar
 	@GetMapping("total-geral")
 	//	@GetMapping(params = "pes=total-geral")
 	public Map<String, Object> pesquisar(PedidoFilter filtro, 
@@ -238,11 +241,13 @@ public class PedidoController {
 	
 	*/
 	
+	@CheckSecurity.Pedidos.PodeBuscar
 	@GetMapping("/{codigo}")
 	public PedidoDTO buscarPor (@PathVariable String codigo) {
 		return assemblerPedido.toModel(pedidoService.buscarPorId(codigo));
 	}
 	
+	@CheckSecurity.Pedidos.PodeCriar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoDTO adicionar (@RequestBody @Valid PedidoInputDTO pedidoInputDTO) {

@@ -13,6 +13,8 @@ import com.algaworks.algafood.domain.model.Pedido;
 public interface PedidoRepository extends CustomJpaRepository<Pedido, Long>, 
 						JpaSpecificationExecutor<Pedido>{
 	
+	boolean isPedidoGerenciadoPor(String codigoPedido, Long usuarioId);
+	
 	Optional<Pedido> findByCodigo(String codigo);
 	
  

@@ -25,6 +25,7 @@ import com.algaworks.algafood.api.v1.assembler.CidadeDtoDisassembler;
 import com.algaworks.algafood.api.v1.model.CidadeDTO;
 import com.algaworks.algafood.api.v1.model.input.CidadeInputDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -52,7 +53,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	public List<CidadeDTO> listar() {
 		return assembler.toCollectionObject(cidadeService.listarCidade());
 	}*/
-	
+	@CheckSecurity.Cidades.PodeConsultar
 	@GetMapping
 	public CollectionModel<CidadeDTO> listar() {
 		
@@ -85,7 +86,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 					.body(cidadeDTO);
 	}*/
 	
-	
+	@CheckSecurity.Cidades.PodeConsultar
 	@GetMapping("/{id}")
 	public CidadeDTO buscarPorId(@PathVariable Long id) {
 		
@@ -108,6 +109,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		
 	}
 	
+	@CheckSecurity.Cidades.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
@@ -128,6 +130,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		}
 	}
 	
+	@CheckSecurity.Cidades.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void eliminiar(@PathVariable Long id) {
@@ -136,6 +139,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		
 	}
 	
+	@CheckSecurity.Cidades.PodeEditar
 	@PutMapping("/{id}")
 	public CidadeDTO atualizar (@RequestBody @Valid CidadeInputDTO cidadeInputDTO, @PathVariable Long id) {
 		Cidade cid = cidadeService.buscarOuFalhar(id);

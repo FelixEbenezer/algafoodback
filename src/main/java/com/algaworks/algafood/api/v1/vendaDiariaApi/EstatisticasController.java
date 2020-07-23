@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.report.VendaReportRep;
 import com.algaworks.algafood.domain.vendaDiariaDomain.VendaDiariaFilter;
 import com.algaworks.algafood.domain.vendaDiariaDomain.VendaQueryRep;
@@ -54,6 +55,7 @@ public class EstatisticasController {
 		return vendaQueryRep.consultarVendasDiarias(filtro, timeOffset); 
 	}
 	*/
+	@CheckSecurity.Estatisticas.PodeConsultar
 	@GetMapping(path = "/vendas-diarias/total-geral", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> consultarVendasTotalGeralEmUri (VendaDiariaFilter filtro, 
 			@RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
@@ -71,6 +73,7 @@ public class EstatisticasController {
 		return json;
 	}
 	
+	@CheckSecurity.Estatisticas.PodeConsultar
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> consultarVendasTotalGeralComoParametro (VendaDiariaFilter filtro, 
 			@RequestParam(required = false, defaultValue = "+00:00") String timeOffset, @RequestParam(required = false) String total) {
@@ -94,7 +97,7 @@ public class EstatisticasController {
 		return json;
 	}
 	
-	
+	@CheckSecurity.Estatisticas.PodeConsultar
 	@GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro,
 			@RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {

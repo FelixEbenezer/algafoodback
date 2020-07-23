@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.v1.assembler.GetStatusPedidoDtoAssembler;
 import com.algaworks.algafood.api.v1.model.GetStatusPedidoDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.StatusPedidoService;
 
 @RestController
@@ -34,6 +35,7 @@ public class StatusPedidoController {
 		
 	}
 	
+	@CheckSecurity.Pedidos.PodeGerenciarPedidos
 	@PutMapping("/entregar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> entregar(@PathVariable String codigo) {
@@ -43,6 +45,7 @@ public class StatusPedidoController {
 
 	}
 	
+	@CheckSecurity.Pedidos.PodeGerenciarPedidos
 	@PutMapping("/cancelar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> cancelar(@PathVariable String codigo) {
@@ -52,6 +55,7 @@ public class StatusPedidoController {
 
 	}
 	
+	@CheckSecurity.Pedidos.PodeGerenciarPedidos
 	@GetMapping("/status")
 	public GetStatusPedidoDTO buscarPorId (@PathVariable String codigo) {
 		//implementar adicionar links aqui sel e Rel

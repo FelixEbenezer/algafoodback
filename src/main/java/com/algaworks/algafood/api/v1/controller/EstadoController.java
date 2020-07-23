@@ -22,6 +22,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoDtoDisassembler;
 import com.algaworks.algafood.api.v1.assembler.GenericAssembler;
 import com.algaworks.algafood.api.v1.model.EstadoDTO;
 import com.algaworks.algafood.api.v1.model.input.EstadoInputDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.EstadoService;
 
@@ -41,17 +42,20 @@ public class EstadoController {
 	@Autowired
 	private EstadoService estadoService;
 	
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping
 	public List<EstadoDTO> listarEstados() {
 		return ass.toCollectionDTO(estadoService.listarEstado(), EstadoDTO.class);
 	}
 	
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping("/{id}")
 	public EstadoDTO buscarPorId(@PathVariable Long id) {
 		return ass.toDTO(estadoService.buscarOuFalhar(id), EstadoDTO.class);
 		
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@PostMapping
 	public ResponseEntity<EstadoDTO> adicionar (@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado es = disassembler.toDomainObject(estadoInputDTO); 
@@ -79,6 +83,7 @@ public class EstadoController {
 	}*/
 	
 	// VERSAO SIMPLIFICADA
+	@CheckSecurity.Estados.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void eliminar (@PathVariable Long id) {
@@ -86,7 +91,7 @@ public class EstadoController {
 	estadoService.removerEstado(id);
 }
 	
-	
+	@CheckSecurity.Estados.PodeEditar
 	@PutMapping("/{id}")
 	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		

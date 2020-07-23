@@ -13,6 +13,7 @@ import com.algaworks.algafood.api.v1.controller.PedidoController;
 import com.algaworks.algafood.api.v1.controller.RestauranteProdutoController;
 import com.algaworks.algafood.api.v1.controller.StatusPedidoController;
 import com.algaworks.algafood.api.v1.model.PedidoDTO;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Pedido;
 
 @Component
@@ -23,6 +24,9 @@ public class PedidoDtoAssembler extends RepresentationModelAssemblerSupport<Pedi
 	
 	@Autowired
 	private AlgaLinks algaLinks; 
+	
+	@Autowired
+	private AlgaSecurity algaSecurity; 
 	
 	public PedidoDtoAssembler() {
 		super(PedidoController.class, PedidoDTO.class);
@@ -82,6 +86,8 @@ public class PedidoDtoAssembler extends RepresentationModelAssemblerSupport<Pedi
 		
 		//links para o status de pedido
 		
+		if (algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+		
 		if (pedido.podeSerConfirmado()) {
 			// pedidoModel.add(algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
 			pedidoDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(StatusPedidoController.class)
@@ -100,7 +106,7 @@ public class PedidoDtoAssembler extends RepresentationModelAssemblerSupport<Pedi
 					.entregar(pedido.getCodigo())).withSelfRel());
 		}
 				
-
+		}
 		
 		
 		//link para FOrmaPagamento 

@@ -20,6 +20,7 @@ import com.algaworks.algafood.api.v1.assembler.GrupoDtoAssembler;
 import com.algaworks.algafood.api.v1.assembler.GrupoDtoDisassembler;
 import com.algaworks.algafood.api.v1.model.GrupoDTO;
 import com.algaworks.algafood.api.v1.model.input.GrupoInputDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.GrupoService;
 
@@ -36,16 +37,19 @@ public class GrupoController {
 	@Autowired
 	private GrupoDtoDisassembler disassembler; 
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar() {
 		return assembler.toCollectionModel(grupoService.listarGrupo());
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping("/{id}")
 	public GrupoDTO buscarPorId (@PathVariable Long id) {
 		return assembler.toModel(grupoService.buscarOuFalhar(id));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar (@RequestBody @Valid GrupoInputDTO grupoInputDTO) {
@@ -55,7 +59,7 @@ public class GrupoController {
 		return grupoDTO;
 	}
 	
-	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{id}")
 	public GrupoDTO atualizar (@PathVariable Long id, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupo = grupoService.buscarOuFalhar(id);
@@ -63,6 +67,7 @@ public class GrupoController {
 		return assembler.toModel(grupoService.adicionarGrupo(grupo));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover (@PathVariable Long id) {
