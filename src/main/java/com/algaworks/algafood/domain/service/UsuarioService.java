@@ -23,6 +23,8 @@ public class UsuarioService {
 	private static final String MSG_CODE_UTILISE = "Usuario de código %d não pode ser removida, pois está em uso";
 
 	private static final String MSG_CODE_MAL = "LE CODE %d INSÉRÉ ERRONÉ";
+	
+	private static final int CODIGO_GRUPO_PADRAO = 4;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder; 
@@ -59,6 +61,20 @@ public class UsuarioService {
 		}
 		
 		return usuarioRepository.save(usuario);
+	}
+	
+	@Transactional
+	public Usuario salvarIncluindoEmGrupoPadrao(Usuario usuario) {
+
+		if (usuario.isNovo()) {
+			usuario = adicionarUsuario(usuario);
+			associarGrupo(usuario.getId(), Long.valueOf(CODIGO_GRUPO_PADRAO)); // Associa o grupo "Cadastrador" (id = 4) no usuário criado agora
+		}
+		else {
+			usuario = adicionarUsuario(usuario);
+		}
+		
+		return usuario;
 	}
 	
 	

@@ -57,7 +57,8 @@ public class UsuarioController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDTO adicionar (@RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
 		Usuario usuario = disassembler.toDomainObject(usuarioInputDTO);
-		UsuarioDTO usuarioDTO = assembler.toModel(usuarioService.adicionarUsuario(usuario));
+		//UsuarioDTO usuarioDTO = assembler.toModel(usuarioService.adicionarUsuario(usuario));
+		UsuarioDTO usuarioDTO = assembler.toModel(usuarioService.salvarIncluindoEmGrupoPadrao(usuario));
 		return usuarioDTO; 
 	}
 	
