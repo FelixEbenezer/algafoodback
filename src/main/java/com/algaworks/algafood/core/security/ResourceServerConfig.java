@@ -32,9 +32,10 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().denyAll()
 			.and() */
 			
-			.formLogin()
+			.formLogin().loginPage("/login")
 			.and()
 			.authorizeRequests()
+			//.antMatchers("/login").permitAll()
 			.antMatchers("/oauth/**").authenticated()
 			.and()
 		
