@@ -1,4 +1,4 @@
-package com.algaworks.algafood.apiexterno;
+package com.algaworks.algafood.apiexterno.cidadeClient;
 
 public class CidadeClientModel {
 
