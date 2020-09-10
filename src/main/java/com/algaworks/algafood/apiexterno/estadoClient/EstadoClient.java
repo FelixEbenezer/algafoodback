@@ -1,6 +1,5 @@
 package com.algaworks.algafood.apiexterno.estadoClient;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 //import org.springframework.web.client.RestTemplate;
@@ -19,27 +19,28 @@ import org.springframework.web.client.RestTemplate;
 import com.algaworks.algafood.apiexterno.problem.ClientApiException;
 import com.sun.net.httpserver.Headers;
 
+@Component
 public class EstadoClient {
 	
 	
-    String baseURL = "http://locahost:8080";
+    String baseURL = "https://ngangalixapi.herokuapp.com";
     String oauthPath = "/oauth/token";
-    String estadosPath = "/v1/estados";
+    String estadosPath = "/estados";
 
     RestTemplate restTemplate = new RestTemplate();
 
 
 	
     public String obterToken(RestTemplate restTemplate, String url) {
-        byte[] authData = "algafood-web:123".getBytes();
+        byte[] authData = "angular:angu".getBytes();
         String encodedAuthData = new String(Base64.getEncoder().encode(authData));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + encodedAuthData);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("username", "joao.ger@algafood.com.br");
-        params.add("password", "123");
+        params.add("username", "f@g.com");
+        params.add("password", "admin");
         params.add("grant_type", "password");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
