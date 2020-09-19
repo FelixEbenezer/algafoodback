@@ -22,6 +22,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoDtoDisassembler;
 import com.algaworks.algafood.api.v1.assembler.GenericAssembler;
 import com.algaworks.algafood.api.v1.model.EstadoDTO;
 import com.algaworks.algafood.api.v1.model.input.EstadoInputDTO;
+import com.algaworks.algafood.apiexterno.estadoClient.EstadoClient;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.EstadoService;
@@ -42,9 +43,13 @@ public class EstadoController {
 	@Autowired
 	private EstadoService estadoService;
 	
+	@Autowired
+	private EstadoClient estadoClient; 
+	
 	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping
 	public List<EstadoDTO> listarEstados() {
+		estadoClient.sincronizarNovosEstados();
 		return ass.toCollectionDTO(estadoService.listarEstado(), EstadoDTO.class);
 	}
 	

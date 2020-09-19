@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.api.v1.model.input.PedidoInputDTO;
+import com.algaworks.algafood.api.v1.model.input.PedidoInputDTO2;
 import com.algaworks.algafood.domain.model.Pedido;
 
 @Component
@@ -14,6 +15,11 @@ public class PedidoDtoDisassembler {
 	private ModelMapper modelMapper; 
 	
 	public Pedido toDomainObject(PedidoInputDTO pedidoInputDTO) {
+		return modelMapper.map(pedidoInputDTO, Pedido.class);
+	}
+	
+	//Quebra de compatibilidade
+	public Pedido toDomainObject2(PedidoInputDTO2 pedidoInputDTO) {
 		return modelMapper.map(pedidoInputDTO, Pedido.class);
 	}
 	

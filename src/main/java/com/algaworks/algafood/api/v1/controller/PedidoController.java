@@ -247,6 +247,7 @@ public class PedidoController {
 		return assemblerPedido.toModel(pedidoService.buscarPorId(codigo));
 	}
 	
+	@Deprecated
 	@CheckSecurity.Pedidos.PodeCriar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

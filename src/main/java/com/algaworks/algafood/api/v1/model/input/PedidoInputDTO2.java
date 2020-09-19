@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 import com.sun.istack.NotNull;
 
-public class PedidoInputDTO {
+public class PedidoInputDTO2 {
 
 	@NotNull
 	@Valid
@@ -29,8 +29,12 @@ public class PedidoInputDTO {
 	
 	
 	//QUEBRA DE COMPTATIBILIDADE
+	@NotNull
+	@Valid
 	private Boolean entregaAgendada;
 
+	@NotNull
+	@Valid
 	private OffsetDateTime dataEntrega;
 	
 	public Boolean getEntregaAgendada() {
