@@ -6,10 +6,24 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> {
 
 	private Long id; 
 	
-	private String nome; 
+	private String nome;
+	
+//	private String nomeEmail; 
 	
 	private String email;
+	
+	
+	
+/*
+	public String getNomeEmail() {
+		return nomeEmail;
+	}
 
+	public void setNomeEmail(String nomeEmail) {
+		this.nomeEmail = nomeEmail;
+	}
+*/
+	
 	public Long getId() {
 		return id;
 	}
@@ -19,7 +33,8 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> {
 	}
 
 	public String getNome() {
-		return nome;
+	 return nome; 
+	//	return nome + email;
 	}
 
 	public void setNome(String nome) {

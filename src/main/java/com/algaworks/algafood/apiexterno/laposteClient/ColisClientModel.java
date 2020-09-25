@@ -2,21 +2,30 @@ package com.algaworks.algafood.apiexterno.laposteClient;
 
 public class ColisClientModel {
 
-	private Long codigo;
-	private String nome;
+	private String lang;
+	private String scope;
+	private int returnCode;
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public String getScope() {
+		return scope;
+	}
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+	public int getReturnCode() {
+		return returnCode;
+	}
+	public void setReturnCode(int returnCode) {
+		this.returnCode = returnCode;
+	} 
 	
-	public Long getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+	
+	
 	
 	
 	

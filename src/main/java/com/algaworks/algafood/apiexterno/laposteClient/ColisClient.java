@@ -1,15 +1,10 @@
 package com.algaworks.algafood.apiexterno.laposteClient;
 
-import java.util.Base64;
-import java.util.Map;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 //import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,41 +16,19 @@ import com.sun.net.httpserver.Headers;
 public class ColisClient {
 	
 	
-    String baseURL = "https://api.laposte.fr/suivi/v2/idships/EP111111110FR?lang=fr_FR";
-  //  String baseURL = "https://api.laposte.fr/suivi/v2/idships";
-
-    String oauthPath = "/oauth/token";
-
+   // String baseURL = "https://api.laposte.fr/suivi/v2/idships/EP111111110FR?lang=fr_FR";
+    String baseURL = "https://api.laposte.fr/suivi/v2/idships/";
 
     RestTemplate restTemplate = new RestTemplate();
-
-
-	
-    public String obterToken(RestTemplate restTemplate, String url) {
-        byte[] authData = "angular:angu".getBytes();
-        String encodedAuthData = new String(Base64.getEncoder().encode(authData));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + encodedAuthData);
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("username", "f@g.com");
-        params.add("password", "admin");
-        params.add("grant_type", "password");
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        Map<String, String> response = restTemplate.postForObject(url, request, Map.class);
-
-        return response.get("access_token");
-    }
-    
     
    
-    public static ColisClientModel adicionarColis(ColisClientInput categoria, RestTemplate restTemplate, String url, String token) {
+    public static ColisClientModel adicionarColis(ColisClientInput categoria, RestTemplate restTemplate, String url) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
-        headers.add("Content-Type", "application/json"); 
-
+        headers.add("Authorization", "X-Okapi-Key U4ctYdEgZn4caOfoo0xOlQXqjUaHMEAMKlZLf2StiIg3lmvkIrcIerEt/x0Xg7oS");
+        headers.add("Content-Type", "application/json");
+        headers.add("Accept", "application/json");
+        headers.add("X-Okapi-Key" , "U4ctYdEgZn4caOfoo0xOlQXqjUaHMEAMKlZLf2StiIg3lmvkIrcIerEt/x0Xg7oS");
+        
         HttpEntity<ColisClientInput> request = new HttpEntity<>(categoria, headers);
 
         ResponseEntity<ColisClientModel> estados = restTemplate
@@ -66,8 +39,7 @@ public class ColisClient {
 
      public ColisClientModel adicionar(ColisClientInput categoriaClienteInput) {
         try {
-        	String token = obterToken(restTemplate, baseURL + oauthPath);
-                ColisClientModel estados = adicionarColis(categoriaClienteInput, restTemplate, baseURL, token);
+                ColisClientModel estados = adicionarColis(categoriaClienteInput, restTemplate, baseURL);
         			
         	return estados;
         } catch (HttpClientErrorException e) {
@@ -76,11 +48,13 @@ public class ColisClient {
     }
      
      
-     //buscarCategoriaPor codigo
      
-     public static ColisClientModel buscarCategoria(RestTemplate restTemplate, String url, String token) {
+     public static ColisClientModel buscarCategoria(RestTemplate restTemplate, String url) {
          HttpHeaders headers = new HttpHeaders();
-         headers.add("Authorization", "Bearer " + token);
+         headers.add("Authorization", "X-Okapi-Key U4ctYdEgZn4caOfoo0xOlQXqjUaHMEAMKlZLf2StiIg3lmvkIrcIerEt/x0Xg7oS");
+         headers.add("Content-Type", "application/json");
+         headers.add("Accept", "application/json");
+         headers.add("X-Okapi-Key" , "U4ctYdEgZn4caOfoo0xOlQXqjUaHMEAMKlZLf2StiIg3lmvkIrcIerEt/x0Xg7oS");
 
          HttpEntity<Headers> request = new HttpEntity<Headers>(headers);
 
@@ -89,11 +63,22 @@ public class ColisClient {
 
          return estados.getBody();
      }
-     
-     public ColisClientModel buscar(Long categoriaId) {
+    
+     public ColisClientModel buscar(String id) {
          try {
-     	String token = obterToken(restTemplate, baseURL + oauthPath);
-         return buscarCategoria(restTemplate, baseURL + categoriaId, token);
+     	
+         return buscarCategoria(restTemplate, baseURL + id);
+     			
+     
+         } catch (HttpClientErrorException e) {
+             throw new ClientApiException(e.getMessage(), e);
+         }
+     }
+     
+     public ColisClientModel buscar2(ColisClientInput cc) {
+         try {
+     	
+         return buscarCategoria(restTemplate, baseURL + cc);
      			
      
          } catch (HttpClientErrorException e) {

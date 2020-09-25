@@ -27,6 +27,7 @@ public class UsuarioDtoAssembler extends RepresentationModelAssemblerSupport<Usu
     @Override
     public UsuarioDTO toModel(Usuario usuario) {
         UsuarioDTO usuarioModel = createModelWithId(usuario.getId(), usuario);
+  //      usuarioModel.setNomeEmail(mountNomEmailView(usuarioModel.getNome()));
         modelMapper.map(usuario, usuarioModel);
         
         usuarioModel.add(WebMvcLinkBuilder.linkTo(UsuarioController.class).withRel("usuarios"));
@@ -36,6 +37,11 @@ public class UsuarioDtoAssembler extends RepresentationModelAssemblerSupport<Usu
         
         return usuarioModel;
     }
+    
+    /*
+    public String mountNomEmailView(Usuario usuario) {
+		return usuario.getNome()+ ", " + usuario.getEmail();
+	}*/
     
     @Override
     public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {

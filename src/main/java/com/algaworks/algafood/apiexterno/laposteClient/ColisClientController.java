@@ -30,11 +30,18 @@ public class ColisClientController {
 
 	}
 	
-	@GetMapping("/{codigo}")
-	public ColisClientModel buscar(@PathVariable Long codigo) throws ParseException
+	@GetMapping("/{id}")
+	public ColisClientModel buscar(@PathVariable String id) throws ParseException
 	{
 	//	categoriaClient.obterDadosToken();
-		return colisClient.buscar(codigo);
+		return colisClient.buscar(id);
+	}
+	
+	@GetMapping
+	public ColisClientModel buscar2(@RequestBody ColisClientInput cc) throws ParseException
+	{
+	//	categoriaClient.obterDadosToken();
+		return colisClient.buscar2(cc);
 	}
 
 }

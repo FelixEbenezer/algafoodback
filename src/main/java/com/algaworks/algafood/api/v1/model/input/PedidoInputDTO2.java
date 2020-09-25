@@ -35,7 +35,7 @@ public class PedidoInputDTO2 {
 
 	@NotNull
 	@Valid
-	private OffsetDateTime dataEntrega;
+	private OffsetDateTime entregaAgendadaPara;
 	
 	public Boolean getEntregaAgendada() {
 		return entregaAgendada;
@@ -45,15 +45,14 @@ public class PedidoInputDTO2 {
 		this.entregaAgendada = entregaAgendada;
 	}
 
-	public OffsetDateTime getDataEntrega() {
-		return dataEntrega;
+	public OffsetDateTime getEntregaAgendadaPara() {
+		return entregaAgendadaPara;
 	}
 
-	public void setDataEntrega(OffsetDateTime dataEntrega) {
-		this.dataEntrega = dataEntrega;
+	public void setEntregaAgendadaPara(OffsetDateTime entregaAgendadaPara) {
+		this.entregaAgendadaPara = entregaAgendadaPara;
 	}
 
-	
 	
 	
 	

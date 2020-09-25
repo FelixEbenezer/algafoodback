@@ -80,7 +80,32 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 	// a outra relação é feita dentro da table Pedido
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
+	
+	
+	//quebra de compatibilidade
+	private boolean entregaAgendada;
+	
+	private OffsetDateTime entregaAgendadaPara;
 
+	
+		public boolean isEntregaAgendada() {
+		return entregaAgendada;
+	}
+
+	public void setEntregaAgendada(boolean entregaAgendada) {
+		this.entregaAgendada = entregaAgendada;
+	}
+
+	public OffsetDateTime getEntregaAgendadaPara() {
+		return entregaAgendadaPara;
+	}
+
+	public void setEntregaAgendadaPara(OffsetDateTime entregaAgendadaPara) {
+		this.entregaAgendadaPara = entregaAgendadaPara;
+	}
+
+	
+	
 	
 	
 	public String getCodigo() {
